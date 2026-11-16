@@ -1,0 +1,3927 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0,user-scalable=yes,viewport-fit=cover">
+<title>Dynamics Lab — Nonlinear Dynamics & Chaos Engine</title>
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+<style>
+:root {
+  --bg-base: #09090b;
+  --bg-card: #121215;
+  --bg-elevated: #18181b;
+  --bg-input: #000000;
+  --border-subtle: #27272a;
+  --border-strong: #3f3f46;
+  --border-active: #ffffff;
+  --text-primary: #ffffff;
+  --text-secondary: #d4d4d8;
+  --text-muted: #a1a1aa;
+  --text-dim: #71717a;
+  --accent: #ffffff;
+  --accent-contrast: #000000;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", "Fira Code", Menlo, Consolas, monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.5;
+  user-select: none;
+}
+
+/* Custom Monochrome Scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #27272a; border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
+
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Header */
+header {
+  height: 50px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  gap: 16px;
+  z-index: 20;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.brand-logo-img {
+  width: 26px;
+  height: 26px;
+  display: block;
+  object-fit: contain;
+}
+.brand-title {
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.8px;
+  color: #ffffff;
+}
+.brand-tag {
+  font-size: 9.5px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  background: transparent;
+  color: var(--text-muted);
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid var(--border-subtle);
+}
+
+.preset-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-elevated);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border-subtle);
+}
+.preset-selector label {
+  color: var(--text-dim);
+  font-size: 11.5px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.preset-selector select {
+  background: transparent;
+  color: #fff;
+  border: none;
+  font-size: 12.5px;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+}
+.preset-selector select option, .preset-selector select optgroup {
+  background: var(--bg-card);
+  color: var(--text-primary);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+button, .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: 5px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  white-space: nowrap;
+}
+button:hover, .btn:hover {
+  background: #27272a;
+  border-color: var(--border-strong);
+  color: #ffffff;
+}
+button:active, .btn:active {
+  transform: translateY(1px);
+}
+button.primary {
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
+  font-weight: 600;
+}
+button.primary:hover {
+  background: #e4e4e7;
+  color: #000000;
+}
+
+/* Dropdown */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 4px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.8);
+  min-width: 175px;
+  z-index: 100;
+  overflow: hidden;
+}
+.dropdown-menu.show {
+  display: block;
+}
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  color: var(--text-secondary);
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.dropdown-item:hover {
+  background: #27272a;
+  color: #ffffff;
+}
+
+/* Workspace Layout */
+main {
+  display: grid;
+  grid-template-columns: 395px 1fr;
+  flex: 1;
+  min-height: 0;
+  position: relative;
+}
+
+/* Sidebar */
+aside {
+  background: var(--bg-card);
+  border-right: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+  user-select: text;
+}
+.sidebar-content {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.panel-card {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: border-color 0.15s;
+}
+.panel-card:focus-within {
+  border-color: var(--border-strong);
+}
+.card-header {
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.015);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text-muted);
+}
+.badge-status {
+  font-size: 10.5px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: #27272a;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+}
+.badge-status.err {
+  background: #271014;
+  color: #fca5a5;
+  border-color: #7f1d1d;
+}
+
+/* Editor */
+.editor-wrap {
+  position: relative;
+  display: flex;
+  background: var(--bg-input);
+  min-height: 190px;
+}
+.line-numbers {
+  padding: 10px 8px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  line-height: 1.6;
+  text-align: right;
+  width: 30px;
+  user-select: none;
+  background: #09090b;
+  border-right: 1px solid var(--border-subtle);
+}
+textarea#src {
+  flex: 1;
+  background: transparent;
+  color: #ffffff;
+  border: none;
+  padding: 10px 12px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 190px;
+  outline: none;
+  tab-size: 2;
+  white-space: pre;
+}
+.editor-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 6px 10px;
+  background: #09090b;
+  border-top: 1px solid var(--border-subtle);
+}
+.chip {
+  padding: 2px 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.12s;
+}
+.chip:hover {
+  background: #27272a;
+  color: #ffffff;
+  border-color: var(--border-strong);
+}
+#err {
+  display: none;
+  padding: 8px 12px;
+  background: #18090b;
+  border-top: 1px solid #450a0a;
+  color: #fca5a5;
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  white-space: pre-wrap;
+}
+#note {
+  display: none;
+  padding: 6px 12px;
+  background: #18181b;
+  border-top: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+/* Solver Settings */
+.solver-grid {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.time-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.input-group label {
+  display: block;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.input-with-controls {
+  display: flex;
+  align-items: center;
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: 5px;
+  padding: 2px 6px;
+}
+.input-with-controls:focus-within {
+  border-color: var(--border-active);
+}
+.input-with-controls input, .input-with-controls select {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  outline: none;
+  padding: 3px 2px;
+}
+.input-with-controls select option {
+  background: var(--bg-card);
+  color: #fff;
+}
+
+/* Parameters */
+.params-container {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.prm-card {
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: 6px;
+  padding: 7px 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.prm-card:hover {
+  border-color: var(--border-strong);
+}
+.prm-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.prm-name {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 12px;
+  color: #ffffff;
+}
+.prm-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.prm-val-input {
+  width: 74px;
+  background: #121215;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  text-align: right;
+  padding: 2px 5px;
+  outline: none;
+}
+.prm-val-input:focus {
+  border-color: #ffffff;
+}
+.prm-range-btn {
+  padding: 1px 5px;
+  font-size: 10px;
+  background: #18181b;
+  border: 1px solid var(--border-subtle);
+  border-radius: 3px;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+.prm-range-btn:hover {
+  color: #fff;
+  border-color: var(--border-strong);
+}
+.prm-slider-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.prm-bound {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-dim);
+  width: 34px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.prm-bound.right { text-align: right; }
+input[type=range] {
+  flex: 1;
+  -webkit-appearance: none;
+  background: #27272a;
+  height: 3px;
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #000000;
+  cursor: pointer;
+}
+
+/* Diagnostics */
+.diagnostics-box {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.lyap-meter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.lyap-value-wrap {
+  display: flex;
+  flex-direction: column;
+}
+.lyap-label {
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-dim);
+}
+.lyap-number {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+}
+.lyap-badge {
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 3px 7px;
+  border-radius: 4px;
+  border: 1px solid #3f3f46;
+  background: #18181b;
+  color: #e4e4e7;
+}
+.lyap-badge.chaos {
+  border-color: #ffffff;
+  background: #ffffff;
+  color: #000000;
+}
+
+.diag-bar-track {
+  width: 100%;
+  height: 4px;
+  background: #27272a;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.diag-bar-fill {
+  height: 100%;
+  background: #ffffff;
+  transition: width 0.3s;
+}
+.diag-expl {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+.diag-expl b { color: #ffffff; }
+.diag-meta {
+  font-size: 10.5px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+  border-top: 1px solid var(--border-subtle);
+  padding-top: 6px;
+}
+
+/* Visual Stage */
+#stage-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-base);
+  position: relative;
+  min-width: 0;
+}
+
+nav#tabs {
+  height: 42px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 2px;
+  overflow-x: auto;
+}
+.tab-btn {
+  padding: 5px 11px;
+  border-radius: 4px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+.tab-btn:hover {
+  color: var(--text-primary);
+  background: #18181b;
+}
+.tab-btn.active {
+  color: #000000;
+  background: #ffffff;
+  font-weight: 600;
+}
+
+#opts-bar {
+  min-height: 40px;
+  background: var(--bg-card);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 14px;
+  gap: 12px;
+  flex-wrap: wrap;
+  z-index: 10;
+}
+.opts-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.opts-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.opt-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+.opt-item select {
+  background: var(--bg-elevated);
+  color: #fff;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+  outline: none;
+}
+.opt-item select:focus {
+  border-color: #ffffff;
+}
+.toggle-pill {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  user-select: none;
+}
+.toggle-pill input[type=checkbox] {
+  accent-color: #ffffff;
+  width: 13px;
+  height: 13px;
+  cursor: pointer;
+}
+
+#viewport {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  background: #000000;
+  touch-action: none;
+}
+canvas#cv {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+.hud-overlay {
+  position: absolute;
+  pointer-events: none;
+  z-index: 15;
+}
+.hud-top-right {
+  top: 12px;
+  right: 12px;
+  display: flex;
+  gap: 6px;
+  pointer-events: auto;
+}
+.hud-btn {
+  background: #18181b;
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.hud-btn:hover {
+  color: #fff;
+  border-color: var(--border-strong);
+  background: #27272a;
+}
+
+.hud-bottom-left {
+  bottom: 12px;
+  left: 12px;
+  background: #121215;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-dim);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.hud-bottom-left b {
+  color: var(--text-secondary);
+}
+
+.hud-playback {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #121215;
+  border: 1px solid var(--border-subtle);
+  border-radius: 20px;
+  padding: 5px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
+  pointer-events: auto;
+  z-index: 15;
+}
+.playback-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #000000;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 11px;
+}
+.playback-slider {
+  width: 120px;
+}
+
+#toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #18181b;
+  border: 1px solid #ffffff;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-family: var(--font-mono);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  transform: translateY(50px);
+  opacity: 0;
+  transition: all 0.2s ease;
+  pointer-events: none;
+  z-index: 100;
+}
+#toast.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+.modal-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.modal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  width: 90%;
+  max-width: 620px;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+}
+.modal-header {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.modal-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+}
+.modal-body {
+  padding: 18px;
+  color: var(--text-secondary);
+  font-size: 12.5px;
+  line-height: 1.6;
+}
+.modal-body h4 {
+  color: #fff;
+  margin: 12px 0 5px;
+  font-size: 13px;
+}
+.modal-body code {
+  background: #18181b;
+  border: 1px solid var(--border-subtle);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: #ffffff;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+}
+.modal-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+}
+.modal-close:hover { color: #fff; }
+
+.eq-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  font-size: 11.5px;
+  font-family: var(--font-mono);
+}
+.eq-table th, .eq-table td {
+  padding: 6px 8px;
+  border: 1px solid var(--border-subtle);
+  text-align: left;
+}
+.eq-table th {
+  background: var(--bg-input);
+  color: #ffffff;
+}
+
+/* Mobile Responsive Controls */
+.mobile-toggle-btn {
+  display: none;
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11.5px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.mobile-toggle-btn:hover {
+  background: #e4e4e7;
+}
+
+.mobile-fab {
+  display: none;
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  z-index: 50;
+  padding: 9px 16px;
+  border-radius: 20px;
+  background: #ffffff;
+  color: #000000;
+  font-weight: 600;
+  font-size: 12px;
+  font-family: var(--font-sans);
+  border: 1px solid #ffffff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.85);
+  cursor: pointer;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.1s ease;
+}
+.mobile-fab:active {
+  transform: scale(0.96);
+}
+
+.mobile-fab-aside {
+  display: none;
+  margin-top: 14px;
+  padding: 10px 16px;
+  background: #ffffff;
+  color: #000000;
+  border: 1px solid #ffffff;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 12.5px;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+}
+.mobile-fab-aside:active {
+  transform: translateY(1px);
+}
+
+.eq-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-top: 10px;
+}
+
+@media(min-width: 861px) {
+  main {
+    display: grid !important;
+    grid-template-columns: 395px 1fr !important;
+  }
+  aside {
+    display: flex !important;
+  }
+  #stage-container {
+    display: flex !important;
+  }
+  .mobile-toggle-btn, .mobile-fab, .mobile-fab-aside {
+    display: none !important;
+  }
+}
+
+@media(max-width: 860px) {
+  #app {
+    height: 100vh;
+    height: 100dvh;
+  }
+  header {
+    height: 48px;
+    padding: 0 10px;
+    gap: 8px;
+  }
+  .brand {
+    gap: 8px;
+  }
+  .brand-logo-img {
+    width: 22px;
+    height: 22px;
+  }
+  .brand-title {
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+  .brand-tag {
+    display: none;
+  }
+  .preset-selector {
+    padding: 3px 6px;
+    max-width: 135px;
+  }
+  .preset-selector label {
+    display: none;
+  }
+  .preset-selector select {
+    font-size: 11px;
+    max-width: 120px;
+    text-overflow: ellipsis;
+  }
+  .header-actions {
+    gap: 5px;
+  }
+  .header-actions button, .header-actions .btn {
+    padding: 4px 8px;
+    font-size: 11px;
+  }
+  .mobile-toggle-btn {
+    display: inline-flex !important;
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  main.show-stage aside {
+    display: none !important;
+  }
+  main.show-stage #stage-container {
+    display: flex !important;
+    flex: 1;
+    height: 100%;
+    width: 100%;
+  }
+
+  main.show-aside #stage-container {
+    display: none !important;
+  }
+  main.show-aside aside {
+    display: flex !important;
+    flex: 1;
+    height: 100%;
+    width: 100%;
+    max-height: none !important;
+    border-right: none !important;
+    border-bottom: none !important;
+  }
+
+  main.show-stage .mobile-fab {
+    display: inline-flex !important;
+  }
+  main.show-aside .mobile-fab {
+    display: none !important;
+  }
+  main.show-aside .mobile-fab-aside {
+    display: block !important;
+  }
+  main.show-stage .mobile-fab-aside {
+    display: none !important;
+  }
+
+  nav#tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 0 8px;
+    gap: 4px;
+    height: 40px;
+  }
+  nav#tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex-shrink: 0;
+    padding: 5px 9px;
+    font-size: 11px;
+  }
+
+  #opts-bar {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    flex-wrap: nowrap;
+    padding: 4px 10px;
+    gap: 8px;
+    min-height: 38px;
+  }
+  #opts-bar::-webkit-scrollbar { display: none; }
+  .opts-left, .opts-right {
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+  }
+
+  .editor-wrap textarea {
+    font-size: 13.5px;
+    min-height: 150px;
+  }
+  .editor-chips {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .editor-chips::-webkit-scrollbar { display: none; }
+  .chip {
+    padding: 5px 8px;
+    font-size: 11.5px;
+  }
+
+  input[type=range]::-webkit-slider-thumb {
+    width: 18px;
+    height: 18px;
+  }
+
+  .modal-card {
+    width: 95vw;
+    max-width: 95vw;
+    max-height: 88vh;
+  }
+  .modal-body {
+    padding: 14px;
+    font-size: 12px;
+  }
+
+  #hud-playback {
+    width: calc(100% - 24px);
+    max-width: 330px;
+    bottom: 12px;
+  }
+  .hud-bottom-left {
+    bottom: 58px;
+    font-size: 10px;
+  }
+}
+
+@media(max-width: 520px) {
+  .brand-title {
+    display: none;
+  }
+  .preset-selector {
+    max-width: 120px;
+  }
+  .header-actions {
+    gap: 4px;
+  }
+  .header-actions button, .header-actions .btn {
+    padding: 4px 6px;
+    font-size: 10.5px;
+  }
+  .mobile-fab {
+    bottom: 12px;
+    right: 12px;
+    padding: 7px 12px;
+    font-size: 11.5px;
+  }
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- Header -->
+  <header>
+    <div class="brand">
+      <img class="brand-logo-img" src="data:image/png;base64,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" alt="D">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="brand-title">DYNAMICS LAB</span>
+        <span class="brand-tag">NONLINEAR ENGINE</span>
+      </div>
+    </div>
+
+    <!-- Presets Selector -->
+    <div class="preset-selector">
+      <label for="preset">Model:</label>
+      <select id="preset"></select>
+    </div>
+
+    <!-- Header Actions -->
+    <div class="header-actions">
+      <button id="btn-mobile-toggle" class="mobile-toggle-btn" title="Toggle Controls / Simulation">
+        <span id="mobile-toggle-text">Equations</span>
+      </button>
+
+      <button id="btn-share" class="primary" title="Copy sharable URL containing complete model state">
+        Share Link
+      </button>
+
+      <div class="dropdown">
+        <button id="btn-export-dropdown" title="Export Model and Data">
+          Export ▾
+        </button>
+        <div class="dropdown-menu" id="export-menu">
+          <div class="dropdown-item" id="export-matlab">MATLAB Script (.m)</div>
+          <div class="dropdown-item" id="export-python">Python / SciPy (.py)</div>
+          <div class="dropdown-item" id="export-csv">CSV Trajectory</div>
+          <div class="dropdown-item" id="export-png">High-Res PNG</div>
+        </div>
+      </div>
+
+      <button id="btn-equilibria" title="Equilibrium Points & Stability Analysis">
+        Equilibria
+      </button>
+
+      <button id="btn-help" title="Mathematical Reference and Syntax">
+        Docs
+      </button>
+    </div>
+  </header>
+
+  <!-- Workspace -->
+  <main>
+    <!-- Left Sidebar -->
+    <aside>
+      <div class="sidebar-content">
+        <!-- Equations Card -->
+        <div class="panel-card">
+          <div class="card-header">
+            <span class="card-title">Differential Equations</span>
+            <span id="eq-badge" class="badge-status">3 Variables</span>
+          </div>
+          <div class="editor-wrap">
+            <div id="line-numbers" class="line-numbers">1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9</div>
+            <textarea id="src" spellcheck="false" placeholder="x' = sigma*(y - x)&#10;y' = x*(rho - z) - y&#10;z' = x*y - beta*z&#10;sigma = 10&#10;rho = 28&#10;beta = 8/3"></textarea>
+          </div>
+          <div class="editor-chips">
+            <span class="chip" data-insert="x' = ">x'</span>
+            <span class="chip" data-insert="y' = ">y'</span>
+            <span class="chip" data-insert="z' = ">z'</span>
+            <span class="chip" data-insert="sin()">sin</span>
+            <span class="chip" data-insert="cos()">cos</span>
+            <span class="chip" data-insert="exp()">exp</span>
+            <span class="chip" data-insert="^2">^2</span>
+            <span class="chip" data-insert="(0) = 1">(0)=1</span>
+          </div>
+          <div id="err"></div>
+          <div id="note"></div>
+        </div>
+
+        <!-- Solver Settings -->
+        <div class="panel-card">
+          <div class="card-header">
+            <span class="card-title">Numerical Solver & Steps</span>
+          </div>
+          <div class="solver-grid">
+            <div class="input-group">
+              <label for="solver-select">Integration Method</label>
+              <div class="input-with-controls">
+                <select id="solver-select">
+                  <option value="rk4" selected>RK4 (Classical Runge-Kutta 4th Order)</option>
+                  <option value="rk45">RK45 Dormand-Prince Adaptive (MATLAB ode45)</option>
+                  <option value="verlet">Symplectic Verlet (Energy Conserving)</option>
+                </select>
+              </div>
+            </div>
+            <div class="time-grid">
+              <div class="input-group">
+                <label for="dt">Time Step (dt)</label>
+                <div class="input-with-controls">
+                  <input id="dt" type="number" step="any" value="0.005">
+                </div>
+              </div>
+              <div class="input-group">
+                <label for="T">Duration (T)</label>
+                <div class="input-with-controls">
+                  <input id="T" type="number" step="any" value="60">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Parameters -->
+        <div class="panel-card">
+          <div class="card-header">
+            <span class="card-title">Live Parameters (Drag to explore)</span>
+          </div>
+          <div id="params-box" class="params-container"></div>
+        </div>
+
+        <!-- Chaos Diagnostics -->
+        <div class="panel-card">
+          <div class="card-header">
+            <span class="card-title">Chaos Diagnostics</span>
+            <span id="chaos-tag" class="lyap-badge chaos">CHAOTIC</span>
+          </div>
+          <div id="diagnostics-content" class="diagnostics-box"></div>
+        </div>
+
+        <button id="btn-mobile-show-sim" class="mobile-fab-aside" title="View Full Simulation">
+          View Simulation
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Viewport -->
+    <section id="stage-container">
+      <nav id="tabs"></nav>
+      <div id="opts-bar">
+        <div class="opts-left" id="opts-left"></div>
+        <div class="opts-right" id="opts-right"></div>
+      </div>
+      <div id="viewport">
+        <canvas id="cv"></canvas>
+
+        <div class="hud-overlay hud-top-right">
+          <button id="btn-reset-cam" class="hud-btn" title="Reset View">R</button>
+          <button id="btn-fullscreen" class="hud-btn" title="Toggle Fullscreen">FS</button>
+        </div>
+
+        <div class="hud-overlay hud-bottom-left" id="hud-stats">
+          <span>Points: <b id="stat-pts">0</b></span>
+          <span>Time: <b id="stat-t">0s</b></span>
+          <span id="stat-cursor"></span>
+        </div>
+
+        <div class="hud-playback" id="hud-playback" style="display:none">
+          <button id="btn-play-pause" class="playback-btn" title="Play / Pause Animation">▶</button>
+          <input id="playback-progress" class="playback-slider" type="range" min="0" max="1" step="0.001" value="1">
+          <select id="playback-speed" style="background:transparent;border:none;color:var(--text-muted);font-family:var(--font-mono);font-size:11px;outline:none;cursor:pointer">
+            <option value="0.25">0.25x</option>
+            <option value="0.5">0.5x</option>
+            <option value="1" selected>1.0x</option>
+            <option value="2">2.0x</option>
+            <option value="4">4.0x</option>
+          </select>
+        </div>
+
+        <button id="btn-mobile-show-controls" class="mobile-fab" title="Edit Model & Parameters">
+          ⚙ Equations
+        </button>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Toast -->
+<div id="toast">
+  <span id="toast-msg">Link copied to clipboard.</span>
+</div>
+
+<!-- Docs Modal -->
+<div class="modal-backdrop" id="modal-help">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">Mathematical Reference & Syntax</div>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <h4>Differential Equations</h4>
+      <p>Define state derivatives using prime or Leibniz notation:</p>
+      <code>x' = -y - z</code> or <code>dx/dt = -y - z</code>
+
+      <h4>Integration Solvers</h4>
+      <p>• <b>RK4:</b> Classical fixed-step 4th-order Runge-Kutta.<br>
+      • <b>RK45 Dormand-Prince:</b> Adaptive-step algorithm matching MATLAB's <code>ode45</code>.<br>
+      • <b>Symplectic Verlet:</b> Geometric integrator preserving total energy in Hamiltonian systems.</p>
+
+      <h4>Stability & Equilibria</h4>
+      <p>Click the <b>Equilibria</b> button in the top bar to run multi-start Newton-Raphson root finding. It computes the Jacobian matrix and eigenvalues, classifying fixed points as Sinks, Sources, Saddles, or Spirals.</p>
+
+      <h4>Analysis Views</h4>
+      <p>• <b>Phase Portrait:</b> 2D orbits with nullclines (x'=0, y'=0) and vector field.<br>
+      • <b>Poincaré Section:</b> Pierce the 3D continuous flow with a plane (z = z0) to reveal fractal cross-sections.<br>
+      • <b>Power Spectrum (FFT):</b> Fast Fourier Transform isolating discrete periodic peaks vs continuous chaotic noise floors.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Equilibria Modal -->
+<div class="modal-backdrop" id="modal-equilibria">
+  <div class="modal-card">
+    <div class="modal-header">
+      <div class="modal-title">Equilibrium Points & Stability Analysis</div>
+      <button class="modal-close" id="modal-eq-close">✕</button>
+    </div>
+    <div class="modal-body" id="equilibria-body">
+      <p>Searching for fixed points via Newton-Raphson…</p>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ==========================================================================
+   1. MATHEMATICAL ENGINE & PARSER
+   ========================================================================== */
+const FUNCS = {
+  sin:1, cos:1, tan:1, asin:1, acos:1, atan:1, atan2:1,
+  sinh:1, cosh:1, tanh:1, exp:1, log:1, ln:1, log10:1,
+  sqrt:1, abs:1, pow:1, min:1, max:1, floor:1, ceil:1, sign:1, hypot:1
+};
+const BANNED = ['t', 'Math', 'NaN', 'Infinity', 'undefined', 'arguments', 'eval'];
+const MAX_RECORD_PTS = 25000;
+
+function tokenize(s) {
+  const re = /\s*(?:(\d+\.?\d*(?:[eE][+-]?\d+)?|\.\d+(?:[eE][+-]?\d+)?)|([A-Za-z_]\w*)|(\*2|[-+*\/^(),%])|(\S))/y;
+  const raw = [];
+  re.lastIndex = 0;
+  while (re.lastIndex < s.length) {
+    const m = re.exec(s);
+    if (!m) break;
+    if (m[1] !== undefined) raw.push({ k: 'num', v: m[1] });
+    else if (m[2] !== undefined) raw.push({ k: 'id', v: m[2] });
+    else if (m[3] !== undefined) raw.push({ k: 'op', v: m[3] === '**' ? '^' : m[3] });
+    else throw new Error("Unexpected character '" + m[4] + "'");
+  }
+
+  const out = [];
+  for (let i = 0; i < raw.length; i++) {
+    out.push(raw[i]);
+    if (i + 1 < raw.length) {
+      const curr = raw[i], next = raw[i + 1];
+      const currEndsVal = (curr.k === 'num') || (curr.k === 'id') || (curr.k === 'op' && curr.v === ')');
+      const nextStartsVal = (next.k === 'num') || (next.k === 'id') || (next.k === 'op' && next.v === '(');
+      if (curr.k === 'id' && FUNCS[curr.v] === 1 && next.k === 'op' && next.v === '(') continue;
+      if (currEndsVal && nextStartsVal) out.push({ k: 'op', v: '*' });
+    }
+  }
+  return out;
+}
+
+function parseExpr(src, names, allowT) {
+  const tk = tokenize(src);
+  let i = 0;
+  const isOp = v => tk[i] && tk[i].k === 'op' && tk[i].v === v;
+
+  function expr() {
+    let a = term();
+    while (isOp('+') || isOp('-')) {
+      const o = tk[i++].v;
+      a = '(' + a + o + term() + ')';
+    }
+    return a;
+  }
+
+  function term() {
+    let a = un();
+    while (isOp('*') || isOp('/') || isOp('%')) {
+      const o = tk[i++].v;
+      a = '(' + a + o + un() + ')';
+    }
+    return a;
+  }
+
+  function un() {
+    if (isOp('-')) { i++; return '(-' + un() + ')'; }
+    if (isOp('+')) { i++; return un(); }
+    return pw();
+  }
+
+  function pw() {
+    const b = atom();
+    if (isOp('^')) { i++; return 'Math.pow(' + b + ',' + un() + ')'; }
+    return b;
+  }
+
+  function atom() {
+    const t = tk[i++];
+    if (!t) throw new Error('Expression ends unexpectedly: ' + src);
+    if (t.k === 'num') return t.v;
+    if (t.k === 'op' && t.v === '(') {
+      const a = expr();
+      if (!isOp(')')) throw new Error('Missing closing parenthesis in: ' + src);
+      i++;
+      return '(' + a + ')';
+    }
+    if (t.k === 'id') {
+      const nm = t.v;
+      if (isOp('(') && FUNCS[nm] === 1 && !names.has(nm)) {
+        i++;
+        const args = [];
+        if (!isOp(')')) {
+          args.push(expr());
+          while (isOp(',')) { i++; args.push(expr()); }
+        }
+        if (!isOp(')')) throw new Error("Missing ')' after " + nm + '(');
+        i++;
+        const mathFn = nm === 'ln' ? 'log' : nm;
+        return 'Math.' + mathFn + '(' + args.join(',') + ')';
+      }
+      if (names.has(nm)) return nm;
+      if (nm === 't' && allowT) return 't';
+      if (nm === 'pi') return 'Math.PI';
+      if (nm === 'e') return 'Math.E';
+      throw new Error("Unknown identifier '" + nm + "' in: " + src);
+    }
+    throw new Error("Unexpected token '" + t.v + "' in: " + src);
+  }
+
+  const code = expr();
+  if (i < tk.length) throw new Error("Unexpected token '" + tk[i].v + "' in: " + src);
+  return code;
+}
+
+function evalConst(src) {
+  const code = parseExpr(src, new Set(), false);
+  const v = new Function('return ' + code)();
+  if (!isFinite(v)) throw new Error('Expression does not evaluate to a finite number: ' + src);
+  return v;
+}
+
+function checkName(nm) {
+  if (/__$/.test(nm) || BANNED.includes(nm) || FUNCS[nm] === 1) {
+    throw new Error("'" + nm + "' is a reserved identifier");
+  }
+  try { new Function(nm, ''); } catch (e) {
+    throw new Error("'" + nm + "' is a reserved language keyword");
+  }
+}
+
+function parseModel(text) {
+  const lines = text.split('\n').map((l, idx) => ({ raw: l, clean: l.replace(/#.*$/, '').trim(), lineNum: idx + 1 })).filter(l => l.clean.length > 0);
+  const eqs = [], ics = {}, params = [];
+
+  for (const item of lines) {
+    const ln = item.clean;
+    let m;
+    if ((m = /^([A-Za-z_]\w*)\s*'\s*=\s*(.+)$/.exec(ln)) || (m = /^d([A-Za-z_]\w*)\s*\/\s*dt\s*=\s*(.+)$/.exec(ln))) {
+      checkName(m[1]);
+      if (eqs.some(e => e.v === m[1])) throw new Error("Variable '" + m[1] + "' defined multiple times (line " + item.lineNum + ")");
+      eqs.push({ v: m[1], src: m[2], lineNum: item.lineNum });
+    } else if ((m = /^([A-Za-z_]\w*)\s*\(\s*0\s*\)\s*=\s*(.+)$/.exec(ln))) {
+      ics[m[1]] = evalConst(m[2]);
+    } else if ((m = /^([A-Za-z_]\w*)\s*=\s*(.+)$/.exec(ln))) {
+      checkName(m[1]);
+      if (params.some(p => p.n === m[1])) throw new Error("Parameter '" + m[1] + "' defined multiple times (line " + item.lineNum + ")");
+      params.push({ n: m[1], val: evalConst(m[2]), lineNum: item.lineNum });
+    } else {
+      throw new Error("Line " + item.lineNum + ": Cannot parse '" + ln + "'. Format as: x' = ... or a = 1.0 or x(0) = 1");
+    }
+  }
+
+  if (!eqs.length) throw new Error("No differential equations defined. Write equations such as:  x' = -y");
+  if (eqs.length > 8) throw new Error("Maximum 8 state variables supported.");
+
+  const vars = eqs.map(e => e.v);
+  for (const p of params) {
+    if (vars.includes(p.n)) throw new Error("Identifier '" + p.n + "' cannot be both a variable and a parameter.");
+  }
+  for (const k in ics) {
+    if (!vars.includes(k)) throw new Error("Initial condition set for unknown variable '" + k + "'.");
+  }
+
+  const notices = [];
+  const icv = vars.map(v => {
+    if (ics[v] === undefined) {
+      notices.push(v + "(0) defaults to 1.0");
+      return 1.0;
+    }
+    return ics[v];
+  });
+
+  const names = new Set([...vars, ...params.map(p => p.n)]);
+  const codes = eqs.map(e => parseExpr(e.src, names, true));
+
+  const body = 'const ' + vars.map((v, i) => v + '=v__[' + i + ']').join(',') + ';' +
+    (params.length ? 'const ' + params.map((p, i) => p.n + '=p__[' + i + ']').join(',') + ';' : '') +
+    codes.map((c, i) => 'o__[' + i + ']=' + c + ';').join('');
+
+  const F = new Function('t', 'v__', 'p__', 'o__', body);
+  return {
+    vars,
+    n: vars.length,
+    F,
+    eqs,
+    pnames: params.map(p => p.n),
+    p: Float64Array.from(params.map(p => p.val)),
+    ics: icv,
+    notices
+  };
+}
+
+function badVec(y) {
+  for (let i = 0; i < y.length; i++) {
+    if (!isFinite(y[i]) || Math.abs(y[i]) > 1e12) return true;
+  }
+  return false;
+}
+
+/* ==========================================================================
+   2. NUMERICAL INTEGRATION ENGINES
+   ========================================================================== */
+function integratorRK4(model) {
+  const n = model.n, F = model.F, p = model.p;
+  const k1 = new Float64Array(n), k2 = new Float64Array(n), k3 = new Float64Array(n), k4 = new Float64Array(n), tmp = new Float64Array(n);
+  return function(t, y, h) {
+    F(t, y, p, k1);
+    for (let i = 0; i < n; i++) tmp[i] = y[i] + 0.5 * h * k1[i];
+    F(t + 0.5 * h, tmp, p, k2);
+    for (let i = 0; i < n; i++) tmp[i] = y[i] + 0.5 * h * k2[i];
+    F(t + 0.5 * h, tmp, p, k3);
+    for (let i = 0; i < n; i++) tmp[i] = y[i] + h * k3[i];
+    F(t + h, tmp, p, k4);
+    for (let i = 0; i < n; i++) y[i] += (h / 6) * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]);
+  };
+}
+
+function simulateDormandPrince(model, dtInit, T, y0) {
+  const n = model.n, F = model.F, p = model.p;
+  const k1 = new Float64Array(n), k2 = new Float64Array(n), k3 = new Float64Array(n);
+  const k4 = new Float64Array(n), k5 = new Float64Array(n), k6 = new Float64Array(n), k7 = new Float64Array(n);
+  const tmp = new Float64Array(n);
+  const y = Float64Array.from(y0 || model.ics);
+
+  const maxPts = MAX_RECORD_PTS;
+  const ts = [0];
+  const ys = model.vars.map((_, idx) => [y[idx]]);
+
+  let t = 0, h = dtInit, diverged = false;
+  const tol = 1e-6;
+
+  while (t < T) {
+    if (t + h > T) h = T - t;
+    F(t, y, p, k1);
+    for (let i = 0; i < n; i++) tmp[i] = y[i] + h * (1/5 * k1[i]);
+    F(t + 0.2 * h, tmp, p, k2);
+    for (let i = 0; i < n; i++) tmp[i] = y[i] + h * (3/40 * k1[i] + 9/40 * k2[i]);
+    F(t + 0.3 * h, tmp, p, k3);
+    for (let i = 0; i < n; i++) tmp[i] = y[i] + h * (44/45 * k1[i] - 56/15 * k2[i] + 32/9 * k3[i]);
+    F(t + 0.8 * h, tmp, p, k4);
+    for (let i = 0; i < n; i++) tmp[i] = y[i] + h * (19372/6561 * k1[i] - 25360/2187 * k2[i] + 64448/6561 * k3[i] - 212/729 * k4[i]);
+    F(t + 8/9 * h, tmp, p, k5);
+    for (let i = 0; i < n; i++) tmp[i] = y[i] + h * (9017/3168 * k1[i] - 355/33 * k2[i] + 46732/5247 * k3[i] + 49/176 * k4[i] - 5103/18656 * k5[i]);
+    F(t + h, tmp, p, k6);
+    for (let i = 0; i < n; i++) tmp[i] = y[i] + h * (35/384 * k1[i] + 500/1113 * k3[i] + 125/192 * k4[i] - 2187/6784 * k5[i] + 11/84 * k6[i]);
+    F(t + h, tmp, p, k7);
+
+    let err = 0;
+    for (let i = 0; i < n; i++) {
+      const e = h * (71/57600 * k1[i] - 71/16695 * k3[i] + 71/1920 * k4[i] - 17253/339200 * k5[i] + 22/525 * k6[i] - 1/40 * k7[i]);
+      err = Math.max(err, Math.abs(e));
+    }
+
+    if (err <= tol || h <= 1e-6) {
+      t += h;
+      for (let i = 0; i < n; i++) y[i] = tmp[i];
+      if (badVec(y)) { diverged = true; break; }
+      ts.push(t);
+      for (let i = 0; i < n; i++) ys[i].push(y[i]);
+    }
+
+    const factor = Math.min(2.0, Math.max(0.2, 0.9 * Math.pow(tol / Math.max(err, 1e-15), 0.2)));
+    h = Math.max(1e-6, Math.min(0.5, h * factor));
+    if (ts.length > maxPts * 2) break;
+  }
+
+  const stride = Math.max(1, Math.ceil(ts.length / maxPts));
+  const resT = [], resY = model.vars.map(() => []);
+  for (let i = 0; i < ts.length; i += stride) {
+    resT.push(ts[i]);
+    for (let k = 0; k < n; k++) resY[k].push(ys[k][i]);
+  }
+  return {
+    t: Float64Array.from(resT),
+    y: resY.map(a => Float64Array.from(a)),
+    diverged,
+    dt: dtInit
+  };
+}
+
+function simulateVerlet(model, dt, T, y0) {
+  const steps = Math.max(1, Math.round(T / dt));
+  const stride = Math.max(1, Math.ceil(steps / MAX_RECORD_PTS));
+  const cnt = Math.floor(steps / stride) + 1;
+  const n = model.n, F = model.F, p = model.p;
+  const y = Float64Array.from(y0 || model.ics);
+  const ts = new Float64Array(cnt), ys = model.vars.map(() => new Float64Array(cnt));
+  let k = 0, diverged = false;
+
+  const rec = t => {
+    ts[k] = t;
+    for (let i = 0; i < n; i++) ys[i][k] = y[i];
+    k++;
+  };
+  rec(0);
+
+  const deriv = new Float64Array(n);
+  for (let s = 1; s <= steps; s++) {
+    const t = (s - 1) * dt;
+    F(t, y, p, deriv);
+    for (let i = 0; i < n; i += 2) {
+      if (i + 1 < n) y[i] += y[i + 1] * dt + 0.5 * deriv[i + 1] * dt * dt;
+      else y[i] += deriv[i] * dt;
+    }
+    const derivNext = new Float64Array(n);
+    F(t + dt, y, p, derivNext);
+    for (let i = 0; i < n; i += 2) {
+      if (i + 1 < n) y[i + 1] += 0.5 * (deriv[i + 1] + derivNext[i + 1]) * dt;
+    }
+    if (badVec(y)) { diverged = true; break; }
+    if (s % stride === 0 && k < cnt) rec(s * dt);
+  }
+  return { t: ts.subarray(0, k), y: ys.map(a => a.subarray(0, k)), diverged, dt };
+}
+
+function simulate(model, dt, T, y0, method = 'rk4') {
+  if (method === 'rk45') return simulateDormandPrince(model, dt, T, y0);
+  if (method === 'verlet' && model.n % 2 === 0) return simulateVerlet(model, dt, T, y0);
+
+  const steps = Math.max(1, Math.round(T / dt));
+  const stride = Math.max(1, Math.ceil(steps / MAX_RECORD_PTS));
+  const cnt = Math.floor(steps / stride) + 1;
+  const step = integratorRK4(model);
+  const y = Float64Array.from(y0 || model.ics);
+  const ts = new Float64Array(cnt), ys = model.vars.map(() => new Float64Array(cnt));
+  let k = 0, diverged = false;
+
+  const rec = t => {
+    ts[k] = t;
+    for (let i = 0; i < model.n; i++) ys[i][k] = y[i];
+    k++;
+  };
+  rec(0);
+
+  for (let s = 1; s <= steps; s++) {
+    step((s - 1) * dt, y, dt);
+    if (badVec(y)) { diverged = true; break; }
+    if (s % stride === 0 && k < cnt) rec(s * dt);
+  }
+  return { t: ts.subarray(0, k), y: ys.map(a => a.subarray(0, k)), diverged, dt, stride };
+}
+
+/* ==========================================================================
+   3. EQUILIBRIA & STABILITY
+   ========================================================================== */
+function solveLinearSystem(A, b, n) {
+  const M = [];
+  for (let i = 0; i < n; i++) M.push([...A[i], b[i]]);
+  for (let i = 0; i < n; i++) {
+    let maxRow = i;
+    for (let k = i + 1; k < n; k++) {
+      if (Math.abs(M[k][i]) > Math.abs(M[maxRow][i])) maxRow = k;
+    }
+    const tmp = M[i]; M[i] = M[maxRow]; M[maxRow] = tmp;
+    if (Math.abs(M[i][i]) < 1e-12) return null;
+    for (let k = i + 1; k < n; k++) {
+      const factor = M[k][i] / M[i][i];
+      for (let j = i; j <= n; j++) M[k][j] -= factor * M[i][j];
+    }
+  }
+  const x = new Float64Array(n);
+  for (let i = n - 1; i >= 0; i--) {
+    let s = M[i][n];
+    for (let j = i + 1; j < n; j++) s -= M[i][j] * x[j];
+    x[i] = s / M[i][i];
+  }
+  return x;
+}
+
+function computeJacobian(F, x, p, n) {
+  const J = [];
+  const eps = 1e-6;
+  const f0 = new Float64Array(n), f1 = new Float64Array(n);
+  F(0, x, p, f0);
+  for (let i = 0; i < n; i++) J.push(new Float64Array(n));
+  for (let j = 0; j < n; j++) {
+    const orig = x[j];
+    x[j] = orig + eps;
+    F(0, x, p, f1);
+    x[j] = orig;
+    for (let i = 0; i < n; i++) J[i][j] = (f1[i] - f0[i]) / eps;
+  }
+  return J;
+}
+
+function findEquilibria(model) {
+  const n = model.n, F = model.F, p = model.p;
+  const found = [];
+  const starts = [
+    new Float64Array(n),
+    Float64Array.from(model.ics)
+  ];
+  for (let s = 0; s < 30; s++) {
+    const v = new Float64Array(n);
+    for (let i = 0; i < n; i++) v[i] = (Math.random() - 0.5) * 45;
+    starts.push(v);
+  }
+
+  for (const st of starts) {
+    const x = Float64Array.from(st);
+    let converged = false;
+    for (let iter = 0; iter < 45; iter++) {
+      const fx = new Float64Array(n);
+      F(0, x, p, fx);
+      let norm = 0;
+      for (let i = 0; i < n; i++) norm += fx[i] * fx[i];
+      if (Math.sqrt(norm) < 1e-8) { converged = true; break; }
+
+      const J = computeJacobian(F, x, p, n);
+      const negFx = fx.map(v => -v);
+      const delta = solveLinearSystem(J, negFx, n);
+      if (!delta) break;
+      let dNorm = 0;
+      for (let i = 0; i < n; i++) {
+        x[i] += delta[i];
+        dNorm += delta[i] * delta[i];
+      }
+      if (Math.sqrt(dNorm) < 1e-10) { converged = true; break; }
+    }
+
+    if (converged && !x.some(v => !isFinite(v) || Math.abs(v) > 1e6)) {
+      const isDup = found.some(pt => {
+        let d = 0;
+        for (let i = 0; i < n; i++) d += (pt.coords[i] - x[i]) ** 2;
+        return Math.sqrt(d) < 1e-3;
+      });
+      if (!isDup) {
+        const J = computeJacobian(F, x, p, n);
+        let eigenvalues = [];
+        let stability = 'Unknown';
+        if (n === 1) {
+          const l = J[0][0];
+          eigenvalues = [{ r: l, i: 0 }];
+          if (l < -1e-6) stability = 'Stable Sink';
+          else if (l > 1e-6) stability = 'Unstable Source';
+          else stability = 'Neutral / Non-hyperbolic';
+        } else if (n === 2) {
+          const a = J[0][0], b = J[0][1], c = J[1][0], d = J[1][1];
+          const trace = a + d, det = a * d - b * c, disc = trace * trace - 4 * det;
+          if (disc >= 0) {
+            eigenvalues = [
+              { r: (trace + Math.sqrt(disc)) / 2, i: 0 },
+              { r: (trace - Math.sqrt(disc)) / 2, i: 0 }
+            ];
+          } else {
+            eigenvalues = [
+              { r: trace / 2, i: Math.sqrt(-disc) / 2 },
+              { r: trace / 2, i: -Math.sqrt(-disc) / 2 }
+            ];
+          }
+          if (det < 0) stability = 'Saddle Point';
+          else if (trace < 0 && disc >= 0) stability = 'Stable Node';
+          else if (trace > 0 && disc >= 0) stability = 'Unstable Node';
+          else if (trace < 0 && disc < 0) stability = 'Stable Focus / Spiral';
+          else if (trace > 0 && disc < 0) stability = 'Unstable Focus / Spiral';
+          else if (Math.abs(trace) < 1e-6) stability = 'Center (Neutral)';
+        } else if (n === 3) {
+          const tr = J[0][0] + J[1][1] + J[2][2];
+          const m00 = J[1][1] * J[2][2] - J[1][2] * J[2][1];
+          const m11 = J[0][0] * J[2][2] - J[0][2] * J[2][0];
+          const m22 = J[0][0] * J[1][1] - J[0][1] * J[1][0];
+          const c1 = m00 + m11 + m22;
+          const det = J[0][0] * m00 - J[0][1] * (J[1][0] * J[2][2] - J[1][2] * J[2][0]) + J[0][2] * (J[1][0] * J[2][1] - J[1][1] * J[2][0]);
+
+          const A = -tr, B = c1, C = -det;
+          const Q = (3 * B - A * A) / 9;
+          const R = (9 * A * B - 27 * C - 2 * A * A * A) / 54;
+          const D = Q * Q * Q + R * R;
+
+          if (D < 0) {
+            const theta = Math.acos(Math.max(-1, Math.min(1, R / Math.sqrt(-Q * Q * Q))));
+            const sqrtQ = 2 * Math.sqrt(-Q);
+            eigenvalues = [
+              { r: sqrtQ * Math.cos(theta / 3) - A / 3, i: 0 },
+              { r: sqrtQ * Math.cos((theta + 2 * Math.PI) / 3) - A / 3, i: 0 },
+              { r: sqrtQ * Math.cos((theta + 4 * Math.PI) / 3) - A / 3, i: 0 }
+            ];
+          } else {
+            const S = Math.cbrt(R + Math.sqrt(D));
+            const T = Math.cbrt(R - Math.sqrt(D));
+            const rReal = S + T - A / 3;
+            const rPair = -(S + T) / 2 - A / 3;
+            const iPair = (Math.sqrt(3) / 2) * Math.abs(S - T);
+            eigenvalues = [
+              { r: rReal, i: 0 },
+              { r: rPair, i: iPair },
+              { r: rPair, i: -iPair }
+            ];
+          }
+
+          let pos = 0, neg = 0, hasComplex = false;
+          eigenvalues.forEach(ev => {
+            if (ev.r > 1e-5) pos++;
+            else if (ev.r < -1e-5) neg++;
+            if (Math.abs(ev.i) > 1e-4) hasComplex = true;
+          });
+
+          if (pos === 0 && neg === 3) {
+            stability = hasComplex ? 'Stable Spiral Sink' : 'Stable Node Sink';
+          } else if (pos === 3 && neg === 0) {
+            stability = hasComplex ? 'Unstable Spiral Source' : 'Unstable Node Source';
+          } else if (pos === 1 && neg === 2) {
+            stability = hasComplex ? 'Saddle-Focus (Index 1)' : 'Saddle Point (Index 1)';
+          } else if (pos === 2 && neg === 1) {
+            stability = hasComplex ? 'Saddle-Focus (Index 2)' : 'Saddle Point (Index 2)';
+          } else {
+            stability = 'Center / Non-hyperbolic';
+          }
+        }
+        found.push({ coords: Array.from(x).map(v => +v.toFixed(4)), J, eigenvalues, stability });
+      }
+    }
+  }
+  return found;
+}
+
+/* ==========================================================================
+   4. LYAPUNOV, BIFURCATION & FFT
+   ========================================================================== */
+function lyapunov(model, dt, T) {
+  const n = model.n, step = integratorRK4(model);
+  const a = Float64Array.from(model.ics);
+  const steps = Math.round(T / dt), trans = Math.floor(steps * 0.2);
+  let t = 0;
+  for (let s = 0; s < trans; s++) {
+    step(t, a, dt);
+    t += dt;
+    if (badVec(a)) return NaN;
+  }
+
+  const d0 = 1e-8, b = new Float64Array(n), u = 1 / Math.sqrt(n);
+  for (let i = 0; i < n; i++) b[i] = a[i] + d0 * u;
+
+  let sum = 0, cnt = 0;
+  const M = 10;
+  for (let s = trans; s < steps; s++) {
+    step(t, a, dt);
+    step(t, b, dt);
+    t += dt;
+    if ((s - trans + 1) % M === 0) {
+      let d = 0;
+      for (let i = 0; i < n; i++) {
+        const diff = b[i] - a[i];
+        d += diff * diff;
+      }
+      d = Math.sqrt(d);
+      if (!(d > 0) || !isFinite(d) || badVec(a)) return NaN;
+      sum += Math.log(d / d0);
+      cnt++;
+      const f = d0 / d;
+      for (let i = 0; i < n; i++) b[i] = a[i] + (b[i] - a[i]) * f;
+    }
+  }
+  return cnt ? sum / (cnt * M * dt) : NaN;
+}
+
+async function bifurcate(model, pi, a, b, N, vi, dt, T, cb) {
+  const X = [], Y = [];
+  const dtb = Math.max(dt, T / 40000);
+  const s1 = Math.round(T * 0.6 / dtb), s2 = Math.round(T * 0.4 / dtb);
+  const p = Float64Array.from(model.p);
+  const step = integratorRK4({ ...model, p });
+  let lastTime = performance.now();
+
+  for (let j = 0; j < N; j++) {
+    p[pi] = a + (b - a) * j / Math.max(1, N - 1);
+    const y = Float64Array.from(model.ics);
+    let t = 0, ok = true;
+    for (let s = 0; s < s1; s++) {
+      step(t, y, dtb);
+      t += dtb;
+    }
+    if (badVec(y)) ok = false;
+    if (ok) {
+      let p2 = NaN, p1 = y[vi], peaks = 0;
+      for (let s = 0; s < s2; s++) {
+        step(t, y, dtb);
+        t += dtb;
+        const c = y[vi];
+        if (p2 < p1 && p1 >= c && peaks < 90) {
+          X.push(p[pi]);
+          Y.push(p1);
+          peaks++;
+        }
+        p2 = p1; p1 = c;
+      }
+      if (!peaks && isFinite(y[vi]) && !badVec(y)) {
+        X.push(p[pi]);
+        Y.push(y[vi]);
+      }
+    }
+    if (performance.now() - lastTime > 16) {
+      lastTime = performance.now();
+      if (cb(j / N, X, Y) === false) return null;
+      await new Promise(r => setTimeout(r, 0));
+    }
+  }
+  cb(1, X, Y);
+  return { X, Y };
+}
+
+function computeFFT(real, imag) {
+  const n = real.length;
+  let j = 0;
+  for (let i = 0; i < n - 1; i++) {
+    if (i < j) {
+      let temp = real[i]; real[i] = real[j]; real[j] = temp;
+      temp = imag[i]; imag[i] = imag[j]; imag[j] = temp;
+    }
+    let k = n >> 1;
+    while (k <= j) { j -= k; k >>= 1; }
+    j += k;
+  }
+  for (let len = 2; len <= n; len <<= 1) {
+    const half = len >> 1;
+    const angle = -2 * Math.PI / len;
+    const wStepR = Math.cos(angle), wStepI = Math.sin(angle);
+    for (let i = 0; i < n; i += len) {
+      let wR = 1, wI = 0;
+      for (let k = 0; k < half; k++) {
+        const uR = real[i + k], uI = imag[i + k];
+        const vR = real[i + k + half] * wR - imag[i + k + half] * wI;
+        const vI = real[i + k + half] * wI + imag[i + k + half] * wR;
+        real[i + k] = uR + vR;
+        imag[i + k] = uI + vI;
+        real[i + k + half] = uR - vR;
+        imag[i + k + half] = uI - vI;
+        const nextWR = wR * wStepR - wI * wStepI;
+        wI = wR * wStepI + wI * wStepR;
+        wR = nextWR;
+      }
+    }
+  }
+}
+
+/* ==========================================================================
+   5. PRESETS
+   ========================================================================== */
+const PRESETS = [
+  {
+    category: 'Chaotic Attractors',
+    name: 'Lorenz Attractor (Butterfly Chaos)',
+    dt: 0.005, T: 60, tab: '3d',
+    text: `# Lorenz 1963: Atmospheric convection & butterfly effect
+x' = sigma*(y - x)
+y' = x*(rho - z) - y
+z' = x*y - beta*z
+sigma = 10
+rho = 28
+beta = 8/3
+x(0) = 1
+y(0) = 1
+z(0) = 1`
+  },
+  {
+    category: 'Chaotic Attractors',
+    name: 'Rössler Attractor (Spiral Band)',
+    dt: 0.01, T: 250, tab: '3d',
+    text: `# Rössler 1976: Canonical non-linear chaotic band
+x' = -y - z
+y' = x + a*y
+z' = b + z*(x - c)
+a = 0.2
+b = 0.2
+c = 5.7
+x(0) = 1
+y(0) = 1
+z(0) = 0`
+  },
+  {
+    category: 'Chaotic Attractors',
+    name: 'Aizawa Attractor (Spherical Torus)',
+    dt: 0.01, T: 120, tab: '3d',
+    text: `# Aizawa 1995: 3D rotating spherical chaotic flow
+x' = (z - b)*x - d*y
+y' = d*x + (z - b)*y
+z' = c + a*z - (z^3)/3 - (x^2 + y^2)*(1 + e*z) + f*z*(x^3)
+a = 0.95
+b = 0.7
+c = 0.6
+d = 3.5
+e = 0.25
+f = 0.1
+x(0) = 0.1
+y(0) = 0
+z(0) = 0`
+  },
+  {
+    category: 'Chaotic Attractors',
+    name: 'Chen Attractor (Dual Vortex)',
+    dt: 0.005, T: 40, tab: '3d',
+    text: `# Chen 1999: Dual vortex chaotic attractor
+x' = a*(y - x)
+y' = (c - a)*x - x*z + c*y
+z' = x*y - b*z
+a = 35
+b = 3
+c = 28
+x(0) = -0.1
+y(0) = 0.5
+z(0) = -0.6`
+  },
+  {
+    category: 'Chaotic Attractors',
+    name: 'Halvorsen Attractor (3-Fold Symmetry)',
+    dt: 0.01, T: 150, tab: '3d',
+    text: `# Halvorsen: Cyclically symmetric chaotic flow
+x' = -a*x - 4*y - 4*z - y^2
+y' = -a*y - 4*z - 4*x - z^2
+z' = -a*z - 4*x - 4*y - x^2
+a = 1.89
+x(0) = -1.48
+y(0) = -1.51
+z(0) = 2.04`
+  },
+  {
+    category: 'Chaotic Attractors',
+    name: 'Thomas Cyclic Attractor (Labyrinth)',
+    dt: 0.02, T: 500, tab: '3d',
+    text: `# Thomas 1999: Cyclically symmetric 3D chaos
+x' = sin(y) - b*x
+y' = sin(z) - b*y
+z' = sin(x) - b*z
+b = 0.208186
+x(0) = 1
+y(0) = 0.5
+z(0) = 0.2`
+  },
+  {
+    category: 'Oscillators & Limit Cycles',
+    name: 'Van der Pol Oscillator (Limit Cycle)',
+    dt: 0.01, T: 60, tab: 'phase',
+    text: `# Van der Pol 1920: Self-sustained relaxation limit cycle
+x' = y
+y' = mu*(1 - x^2)*y - x
+mu = 2
+x(0) = 0.1
+y(0) = 0`
+  },
+  {
+    category: 'Oscillators & Limit Cycles',
+    name: 'Forced Duffing Oscillator (Period Doubling)',
+    dt: 0.01, T: 300, tab: 'phase',
+    text: `# Duffing 1918: Driven double-well potential
+x' = y
+y' = x - x^3 - delta*y + gamma*cos(w*t)
+delta = 0.3
+gamma = 0.5
+w = 1.2
+x(0) = 1
+y(0) = 0`
+  },
+  {
+    category: 'Biological & Chemical Dynamics',
+    name: 'Lotka–Volterra (Predator–Prey)',
+    dt: 0.01, T: 80, tab: 'phase',
+    text: `# Lotka-Volterra: Ecological predator-prey cycles
+# x = prey population, y = predator population
+x' = a*x - b*x*y
+y' = -c*y + d*x*y
+a = 1.1
+b = 0.4
+c = 0.4
+d = 0.1
+x(0) = 10
+y(0) = 10`
+  },
+  {
+    category: 'Biological & Chemical Dynamics',
+    name: 'Hindmarsh–Rose (Bursting Neuron)',
+    dt: 0.02, T: 250, tab: 'series',
+    text: `# Hindmarsh-Rose 1984: Neural bursting & action spikes
+x' = y - a*x^3 + b*x^2 - z + I
+y' = c - d*x^2 - y
+z' = r*(s*(x - xr) - z)
+a = 1
+b = 3
+c = 1
+d = 5
+r = 0.006
+s = 4
+xr = -1.6
+I = 3.2
+x(0) = -1.3
+y(0) = -9
+z(0) = 1`
+  },
+  {
+    category: 'Biological & Chemical Dynamics',
+    name: 'FitzHugh–Nagumo (Neuron Spikes)',
+    dt: 0.02, T: 150, tab: 'series',
+    text: `# FitzHugh-Nagumo 1961: Neural membrane action potentials
+v' = v - (v^3)/3 - w + I
+w' = eps*(v + a - b*w)
+a = 0.7
+b = 0.8
+eps = 0.08
+I = 0.5
+v(0) = -1
+w(0) = 1`
+  },
+  {
+    category: 'Biological & Chemical Dynamics',
+    name: 'Brusselator (Chemical Clock)',
+    dt: 0.02, T: 80, tab: 'phase',
+    text: `# Prigogine & Lefever: Autocatalytic oscillating reaction
+x' = a - (b + 1)*x + (x^2)*y
+y' = b*x - (x^2)*y
+a = 1
+b = 3
+x(0) = 1.5
+y(0) = 1.5`
+  },
+  {
+    category: 'Hamiltonian Dynamics',
+    name: 'Hénon–Heiles (Galactic Stellar Chaos)',
+    dt: 0.01, T: 160, tab: 'phase',
+    text: `# Hénon-Heiles 1964: Non-linear stellar orbits
+x' = px
+px' = -x - 2*x*y
+y' = py
+py' = -y - (x^2 - y^2)
+x(0) = 0
+px(0) = 0.35
+y(0) = 0.2
+py(0) = 0`
+  },
+  {
+    category: 'Biological & Chemical Dynamics',
+    name: 'SIR Epidemic Model',
+    dt: 0.05, T: 120, tab: 'series',
+    text: `# Kermack-McKendrick: Susceptible, Infected, Recovered
+s' = -beta*s*i
+i' = beta*s*i - gamma*i
+r' = gamma*i
+beta = 0.4
+gamma = 0.1
+s(0) = 0.99
+i(0) = 0.01
+r(0) = 0`
+  }
+];
+
+/* ==========================================================================
+   6. MONOCHROME GRAPHICS & RENDERING
+   ========================================================================== */
+const $ = id => document.getElementById(id);
+const cv = $('cv'), ctx = cv.getContext('2d'), stage = $('viewport');
+
+// Rich Scientific Color Palette
+const PALETTE = [
+  '#38bdf8', // Electric Cyan
+  '#f43f5e', // Neon Rose
+  '#10b981', // Vivid Emerald
+  '#a855f7', // Radiant Violet
+  '#f59e0b', // Solar Amber
+  '#06b6d4', // Deep Teal
+  '#ec4899', // Hot Pink
+  '#84cc16'  // Electric Lime
+];
+
+// Luminous Multi-Spectrum Gradient along trajectory time
+function drawColorTrail(px, py, lw, endIdx, pz) {
+  const n = endIdx !== undefined ? Math.min(px.length, endIdx) : px.length;
+  if (n < 2) return;
+  const chunk = Math.max(2, Math.ceil(n / 130));
+  ctx.lineWidth = lw;
+  ctx.lineJoin = 'round';
+  ctx.lineCap = 'round';
+
+  for (let s = 0; s < n - 1; s += chunk - 1) {
+    const e = Math.min(n - 1, s + chunk - 1);
+    ctx.beginPath();
+    ctx.moveTo(px[s], py[s]);
+    for (let i = s + 1; i <= e; i++) ctx.lineTo(px[i], py[i]);
+    const frac = s / n;
+    // Radiant Progression: Cyan (195°) -> Violet (275°) -> Coral Rose (345°) -> Amber (45°)
+    const hue = (195 + frac * 210) % 360;
+    let lightness = 62;
+    if (pz && pz[s] !== undefined) {
+      lightness = Math.max(38, Math.min(78, 62 - pz[s] * 22));
+    }
+    ctx.strokeStyle = 'hsl(' + hue + ', 95%, ' + lightness + '%)';
+    ctx.stroke();
+  }
+}
+
+const STATE = {
+  model: null,
+  sim: null,
+  twin: null,
+  extraTrajs: [],
+  swarmTrajs: [],
+  equilibria: [],
+  lyap: NaN,
+  lyapT: 0,
+  tab: 'phase',
+  solver: 'rk4',
+  ax: { x: '', y: '', z: '' },
+  twinOn: true,
+  vectorFieldOn: true,
+  nullclinesOn: true,
+  showEquilibriaOnPhase: true,
+  autoRotate: true,
+  animMode: false,
+  animPlaying: true,
+  animProgress: 1.0,
+  animSpeed: 1.0,
+  yaw: 0.65,
+  pitch: 0.38,
+  zoom: 1.0,
+  panX: 0,
+  panY: 0,
+  drag: false,
+  dragButton: 0,
+  bif: null,
+  bifTok: null,
+  bifCfg: { pi: 0, a: 0, b: 1, N: 300, vi: 0 },
+  poincarePlane: 'z',
+  poincareVal: 27,
+  fftVar: 0,
+  W: 100,
+  H: 100,
+  dpr: 1
+};
+
+let scheduleTimer = null;
+let lastAnimTime = performance.now();
+
+function resizeCanvas() {
+  const r = stage.getBoundingClientRect();
+  STATE.dpr = window.devicePixelRatio || 1;
+  STATE.W = r.width;
+  STATE.H = r.height;
+  cv.width = Math.max(10, Math.round(r.width * STATE.dpr));
+  cv.height = Math.max(10, Math.round(r.height * STATE.dpr));
+  ctx.setTransform(STATE.dpr, 0, 0, STATE.dpr, 0, 0);
+  draw();
+}
+new ResizeObserver(resizeCanvas).observe(stage);
+
+function formatNum(v) {
+  if (v === 0) return '0';
+  const a = Math.abs(v);
+  if (a >= 1e5 || a < 1e-3) return v.toExponential(2);
+  return String(+v.toPrecision(4));
+}
+
+function calcTicks(lo, hi, count) {
+  const raw = (hi - lo) / count;
+  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const f = raw / mag;
+  const step = (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * mag;
+  const out = [];
+  for (let v = Math.ceil(lo / step) * step; v <= hi + step * 1e-9; v += step) {
+    out.push(Math.abs(v) < step * 1e-9 ? 0 : v);
+  }
+  return out;
+}
+
+function getExtent(arrs) {
+  let lo = Infinity, hi = -Infinity;
+  for (const a of arrs) {
+    if (!a) continue;
+    for (let i = 0; i < a.length; i++) {
+      const v = a[i];
+      if (v < lo) lo = v;
+      if (v > hi) hi = v;
+    }
+  }
+  if (!isFinite(lo)) { lo = -1; hi = 1; }
+  if (hi - lo < 1e-12) { lo -= 1; hi += 1; }
+  const pad = (hi - lo) * 0.06;
+  return [lo - pad, hi + pad];
+}
+
+function drawFrame(xr, yr, xLabel, yLabel) {
+  const m = { l: 64, r: 24, t: 20, b: 44 };
+  const w = STATE.W - m.l - m.r, h = STATE.H - m.t - m.b;
+  const X = v => m.l + ((v - xr[0]) / (xr[1] - xr[0])) * w;
+  const Y = v => m.t + h - ((v - yr[0]) / (yr[1] - yr[0])) * h;
+  const invX = px => xr[0] + ((px - m.l) / w) * (xr[1] - xr[0]);
+  const invY = py => yr[0] + ((m.t + h - py) / h) * (yr[1] - yr[0]);
+
+  ctx.font = '11px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+  ctx.strokeStyle = '#18181b';
+  ctx.lineWidth = 1;
+
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'top';
+  ctx.fillStyle = '#71717a';
+  for (const v of calcTicks(xr[0], xr[1], Math.max(3, w / 90))) {
+    const x = X(v);
+    ctx.beginPath();
+    ctx.moveTo(x, m.t);
+    ctx.lineTo(x, m.t + h);
+    ctx.stroke();
+    ctx.fillText(formatNum(v), x, m.t + h + 6);
+  }
+
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  for (const v of calcTicks(yr[0], yr[1], Math.max(3, h / 60))) {
+    const y = Y(v);
+    ctx.beginPath();
+    ctx.moveTo(m.l, y);
+    ctx.lineTo(m.l + w, y);
+    ctx.stroke();
+    ctx.fillText(formatNum(v), m.l - 8, y);
+  }
+
+  ctx.strokeStyle = '#27272a';
+  ctx.strokeRect(m.l, m.t, w, h);
+
+  ctx.font = '12px ' + getComputedStyle(document.body).getPropertyValue('--font-sans');
+  ctx.fillStyle = '#a1a1aa';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'bottom';
+  ctx.fillText(xLabel, m.l + w / 2, STATE.H - 8);
+
+  ctx.save();
+  ctx.translate(16, m.t + h / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.textBaseline = 'top';
+  ctx.fillText(yLabel, 0, 0);
+  ctx.restore();
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(m.l, m.t, w, h);
+  ctx.clip();
+
+  return { X, Y, invX, invY, rect: { l: m.l, t: m.t, w, h }, end: () => ctx.restore() };
+}
+
+function getSeries(sim, name) {
+  if (name === 't') return sim.t;
+  const idx = STATE.model.vars.indexOf(name);
+  return sim.y[idx >= 0 ? idx : 0];
+}
+
+function drawVectorField(f, xr, yr, xName, yName) {
+  const m = STATE.model;
+  if (!m || xName === 't' || yName === 't' || m.vars.length < 2) return;
+  const xi = m.vars.indexOf(xName), yi = m.vars.indexOf(yName);
+  if (xi < 0 || yi < 0) return;
+
+  const nx = 22, ny = 16;
+  const dx = (xr[1] - xr[0]) / nx, dy = (yr[1] - yr[0]) / ny;
+  const vState = Float64Array.from(m.ics);
+  const outDeriv = new Float64Array(m.n);
+  const maxArrowLen = Math.min(f.rect.w / nx, f.rect.h / ny) * 0.75;
+
+  ctx.save();
+  ctx.lineWidth = 1;
+
+  for (let ix = 0; ix <= nx; ix++) {
+    const xVal = xr[0] + ix * dx;
+    for (let iy = 0; iy <= ny; iy++) {
+      const yVal = yr[0] + iy * dy;
+      vState[xi] = xVal;
+      vState[yi] = yVal;
+      m.F(0, vState, m.p, outDeriv);
+      const vx = outDeriv[xi], vy = outDeriv[yi];
+      const mag = Math.hypot(vx, vy);
+      if (!isFinite(mag) || mag < 1e-9) continue;
+
+      const px0 = f.X(xVal), py0 = f.Y(yVal);
+      const len = maxArrowLen * Math.min(1, Math.log10(1 + mag) * 0.8 + 0.2);
+      const ux = (vx / mag) * len, uy = -(vy / mag) * len;
+
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.22)';
+      ctx.beginPath();
+      ctx.moveTo(px0, py0);
+      ctx.lineTo(px0 + ux, py0 + uy);
+      ctx.stroke();
+
+      const angle = Math.atan2(uy, ux);
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.45)';
+      ctx.beginPath();
+      ctx.moveTo(px0 + ux, py0 + uy);
+      ctx.lineTo(px0 + ux - 3.5 * Math.cos(angle - 0.45), py0 + uy - 3.5 * Math.sin(angle - 0.45));
+      ctx.lineTo(px0 + ux - 3.5 * Math.cos(angle + 0.45), py0 + uy - 3.5 * Math.sin(angle + 0.45));
+      ctx.closePath();
+      ctx.fill();
+    }
+  }
+  ctx.restore();
+}
+
+function drawNullclines(f, xr, yr, xName, yName) {
+  const m = STATE.model;
+  if (!m || xName === 't' || yName === 't' || m.vars.length < 2) return;
+  const xi = m.vars.indexOf(xName), yi = m.vars.indexOf(yName);
+  if (xi < 0 || yi < 0) return;
+
+  const res = 60;
+  const dx = (xr[1] - xr[0]) / res, dy = (yr[1] - yr[0]) / res;
+  const vState = Float64Array.from(m.ics);
+  const deriv = new Float64Array(m.n);
+
+  ctx.save();
+  ctx.lineWidth = 1.2;
+
+  // X-nullcline: Electric Cyan dashed
+  ctx.strokeStyle = 'rgba(56, 189, 248, 0.7)';
+  ctx.setLineDash([4, 4]);
+  for (let ix = 0; ix < res; ix++) {
+    const x0 = xr[0] + ix * dx, x1 = x0 + dx;
+    for (let iy = 0; iy < res; iy++) {
+      const y0 = yr[0] + iy * dy, y1 = y0 + dy;
+      vState[xi] = x0; vState[yi] = y0; m.F(0, vState, m.p, deriv); const f00 = deriv[xi];
+      vState[xi] = x1; vState[yi] = y1; m.F(0, vState, m.p, deriv); const f11 = deriv[xi];
+      if (f00 * f11 < 0) {
+        ctx.beginPath();
+        ctx.moveTo(f.X(x0), f.Y(y0));
+        ctx.lineTo(f.X(x1), f.Y(y1));
+        ctx.stroke();
+      }
+    }
+  }
+
+  // Y-nullcline: Neon Rose dotted
+  ctx.strokeStyle = 'rgba(244, 63, 94, 0.7)';
+  ctx.setLineDash([2, 3]);
+  for (let ix = 0; ix < res; ix++) {
+    const x0 = xr[0] + ix * dx, x1 = x0 + dx;
+    for (let iy = 0; iy < res; iy++) {
+      const y0 = yr[0] + iy * dy, y1 = y0 + dy;
+      vState[xi] = x0; vState[yi] = y0; m.F(0, vState, m.p, deriv); const f00 = deriv[yi];
+      vState[xi] = x1; vState[yi] = y1; m.F(0, vState, m.p, deriv); const f11 = deriv[yi];
+      if (f00 * f11 < 0) {
+        ctx.beginPath();
+        ctx.moveTo(f.X(x0), f.Y(y0));
+        ctx.lineTo(f.X(x1), f.Y(y1));
+        ctx.stroke();
+      }
+    }
+  }
+  ctx.restore();
+}
+
+/* Phase Portrait */
+function drawPhasePortrait() {
+  const xs = getSeries(STATE.sim, STATE.ax.x), ys = getSeries(STATE.sim, STATE.ax.y);
+  const tw = STATE.twinOn && STATE.twin;
+  const xt = tw ? getSeries(STATE.twin, STATE.ax.x) : [];
+  const yt = tw ? getSeries(STATE.twin, STATE.ax.y) : [];
+
+  const xr = getExtent([xs, xt]);
+  const yr = getExtent([ys, yt]);
+  const f = drawFrame(xr, yr, STATE.ax.x, STATE.ax.y);
+  STATE.lastFrame = f;
+
+  if (STATE.vectorFieldOn) drawVectorField(f, xr, yr, STATE.ax.x, STATE.ax.y);
+  if (STATE.nullclinesOn) drawNullclines(f, xr, yr, STATE.ax.x, STATE.ax.y);
+
+  // Twin trajectory (Neon Rose)
+  if (tw && xt.length > 1) {
+    ctx.save();
+    ctx.strokeStyle = 'rgba(244, 63, 94, 0.75)';
+    ctx.lineWidth = 1.3;
+    ctx.beginPath();
+    for (let i = 0; i < xt.length; i++) {
+      const x = f.X(xt[i]), y = f.Y(yt[i]);
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Swarm Trajectories (Radiant Violet)
+  for (const sw of STATE.swarmTrajs) {
+    const swX = getSeries(sw, STATE.ax.x), swY = getSeries(sw, STATE.ax.y);
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.35)';
+    ctx.lineWidth = 1.1;
+    ctx.beginPath();
+    for (let i = 0; i < swX.length; i++) {
+      const x = f.X(swX[i]), y = f.Y(swY[i]);
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  // Seeded extra paths (Vivid Emerald)
+  for (const ex of STATE.extraTrajs) {
+    const exX = getSeries(ex, STATE.ax.x), exY = getSeries(ex, STATE.ax.y);
+    ctx.strokeStyle = 'rgba(16, 185, 129, 0.65)';
+    ctx.lineWidth = 1.3;
+    ctx.beginPath();
+    for (let i = 0; i < exX.length; i++) {
+      const x = f.X(exX[i]), y = f.Y(exY[i]);
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+  }
+
+  // Main Trajectory: Radiant Color Spectrum Trail
+  const total = xs.length;
+  const maxIdx = STATE.animMode ? Math.max(2, Math.round(total * STATE.animProgress)) : total;
+  const px = new Float64Array(maxIdx), py = new Float64Array(maxIdx);
+  for (let i = 0; i < maxIdx; i++) {
+    px[i] = f.X(xs[i]);
+    py[i] = f.Y(ys[i]);
+  }
+  drawColorTrail(px, py, 1.8, maxIdx);
+
+  // Equilibria overlay (Green for stable, Red for unstable)
+  if (STATE.showEquilibriaOnPhase && STATE.equilibria.length) {
+    const xi = STATE.model.vars.indexOf(STATE.ax.x), yi = STATE.model.vars.indexOf(STATE.ax.y);
+    if (xi >= 0 && yi >= 0) {
+      STATE.equilibria.forEach(eq => {
+        const qx = f.X(eq.coords[xi]), qy = f.Y(eq.coords[yi]);
+        ctx.fillStyle = eq.stability.includes('Stable') ? '#10b981' : '#f43f5e';
+        ctx.beginPath();
+        ctx.arc(qx, qy, 4.5, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      });
+    }
+  }
+
+  // Initial Point
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.arc(px[0], py[0], 3.5, 0, 2 * Math.PI);
+  ctx.fill();
+
+  // Animated Comet Head with Cyan Halo
+  if (maxIdx > 1) {
+    const hx = px[maxIdx - 1], hy = py[maxIdx - 1];
+    ctx.shadowColor = '#38bdf8';
+    ctx.shadowBlur = 14;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(hx, hy, 4.5, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+
+  f.end();
+}
+
+/* 3D Attractor */
+function draw3DAttractor() {
+  const m = STATE.model;
+  const names = m.n >= 3 ? m.vars : [...m.vars, 't'];
+  const get = nm => nm === 't' ? STATE.sim.t : STATE.sim.y[m.vars.indexOf(nm)];
+  const A = [
+    get(STATE.ax.x || names[0]),
+    get(STATE.ax.y || names[1] || names[0]),
+    get(STATE.ax.z || names[2] || names[0])
+  ];
+  const labels = [STATE.ax.x || names[0], STATE.ax.y || names[1] || names[0], STATE.ax.z || names[2] || names[0]];
+
+  const ex = A.map(a => getExtent([a]));
+  const cen = ex.map(e => (e[0] + e[1]) / 2);
+  const sc = Math.max(...ex.map(e => e[1] - e[0])) / 2;
+
+  const cy = Math.cos(STATE.yaw), sy = Math.sin(STATE.yaw);
+  const cp = Math.cos(STATE.pitch), sp = Math.sin(STATE.pitch);
+  const R = Math.min(STATE.W, STATE.H) * 0.38 * STATE.zoom;
+  const cx = STATE.W / 2 + STATE.panX, cyy = STATE.H / 2 + STATE.panY;
+
+  const proj = (x, y, z) => {
+    x /= sc; y /= sc; z /= sc;
+    const x1 = x * cy - z * sy, z1 = x * sy + z * cy;
+    const y2 = y * cp - z1 * sp, z2 = y * sp + z1 * cp;
+    const k = 1 / (1 + z2 * 0.22);
+    return [cx + x1 * R * k, cyy - y2 * R * k, z2];
+  };
+
+  // 3D Axis Box
+  ctx.lineWidth = 1;
+  const axes = [[1,0,0], [0,1,0], [0,0,1]];
+  axes.forEach((d, k) => {
+    const p1 = proj(-d[0]*sc*1.05, -d[1]*sc*1.05, -d[2]*sc*1.05);
+    const p2 = proj(d[0]*sc*1.05, d[1]*sc*1.05, d[2]*sc*1.05);
+    ctx.strokeStyle = '#27272a';
+    ctx.beginPath();
+    ctx.moveTo(p1[0], p1[1]);
+    ctx.lineTo(p2[0], p2[1]);
+    ctx.stroke();
+
+    ctx.fillStyle = PALETTE[k % PALETTE.length];
+    ctx.font = '11.5px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(labels[k], p2[0] + (p2[0] > cx ? 12 : -12), p2[1]);
+  });
+
+  // Main 3D Curve with Luminous Multi-Spectrum Gradient & Depth Cueing
+  const total = A[0].length;
+  const maxIdx = STATE.animMode ? Math.max(2, Math.round(total * STATE.animProgress)) : total;
+  const px = new Float64Array(maxIdx), py = new Float64Array(maxIdx), pz = new Float64Array(maxIdx);
+
+  for (let i = 0; i < maxIdx; i++) {
+    const pt = proj(A[0][i] - cen[0], A[1][i] - cen[1], A[2][i] - cen[2]);
+    px[i] = pt[0]; py[i] = pt[1]; pz[i] = pt[2];
+  }
+
+  drawColorTrail(px, py, 1.6, maxIdx, pz);
+
+  // Initial Point
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  ctx.arc(px[0], py[0], 3.5, 0, 2 * Math.PI);
+  ctx.fill();
+
+  // Glowing Comet Head with Cyan Halo
+  if (maxIdx > 1) {
+    const hx = px[maxIdx - 1], hy = py[maxIdx - 1];
+    ctx.shadowColor = '#38bdf8';
+    ctx.shadowBlur = 14;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(hx, hy, 4.5, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+}
+
+/* Time Series */
+function drawTimeSeries() {
+  const m = STATE.model;
+  const f = drawFrame(getExtent([STATE.sim.t]), getExtent(STATE.sim.y), 'Time (t)', 'Value');
+
+  m.vars.forEach((v, k) => {
+    ctx.strokeStyle = PALETTE[k % PALETTE.length];
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    const arr = STATE.sim.y[k];
+    for (let i = 0; i < arr.length; i++) {
+      const x = f.X(STATE.sim.t[i]), y = f.Y(arr[i]);
+      i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
+  });
+  f.end();
+
+  // Legend
+  ctx.font = '11.5px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  m.vars.forEach((v, k) => {
+    ctx.fillStyle = PALETTE[k % PALETTE.length];
+    ctx.fillText('● ' + v, STATE.W - 80, 36 + k * 18);
+  });
+}
+
+/* Sensitivity */
+function drawSensitivity() {
+  const a = STATE.sim, b = STATE.twin;
+  if (!b) { renderNotice('Twin trajectory unavailable'); return; }
+
+  const n = Math.min(a.t.length, b.t.length);
+  const ts = [], ds = [];
+  for (let i = 0; i < n; i++) {
+    let d = 0;
+    for (let k = 0; k < STATE.model.n; k++) {
+      const diff = a.y[k][i] - b.y[k][i];
+      d += diff * diff;
+    }
+    d = Math.sqrt(d);
+    if (d > 0) {
+      ts.push(a.t[i]);
+      ds.push(Math.log10(d));
+    }
+  }
+
+  if (ds.length < 2) { renderNotice('Trajectories remain identical'); return; }
+  const f = drawFrame(getExtent([ts]), getExtent([ds]), 'Time (t)', 'log10(Separation Distance)');
+
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 1.8;
+  ctx.beginPath();
+  ts.forEach((t, i) => {
+    const x = f.X(t), y = f.Y(ds[i]);
+    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+  });
+  ctx.stroke();
+
+  if (isFinite(STATE.lyap) && STATE.lyap > 0) {
+    ctx.setLineDash([5, 4]);
+    ctx.strokeStyle = '#f43f5e';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    const t0 = ts[0], t1 = ts[ts.length - 1];
+    ctx.moveTo(f.X(t0), f.Y(-6 + (STATE.lyap * t0) / Math.LN10));
+    ctx.lineTo(f.X(t1), f.Y(-6 + (STATE.lyap * t1) / Math.LN10));
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  f.end();
+
+  ctx.font = '11.5px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#38bdf8';
+  ctx.fillText('● Measured separation log10 ||Δy||', STATE.W - 250, 36);
+  if (isFinite(STATE.lyap) && STATE.lyap > 0) {
+    ctx.fillStyle = '#f43f5e';
+    ctx.fillText('- - Theoretical slope (λ = ' + STATE.lyap.toFixed(3) + ')', STATE.W - 250, 54);
+  }
+}
+
+/* Bifurcation */
+function drawBifurcation() {
+  const B = STATE.bif;
+  if (!B) {
+    renderNotice('Select sweep parameter and click "Compute Sweep" above.');
+    return;
+  }
+  const f = drawFrame(B.xr, getExtent([B.Y.length ? B.Y : [0]]), 'Parameter: ' + B.pname, 'Local Maxima of ' + B.vname);
+  ctx.fillStyle = 'rgba(56, 189, 248, 0.65)';
+  const len = B.X.length;
+  for (let i = 0; i < len; i++) {
+    ctx.fillRect(f.X(B.X[i]) - 0.75, f.Y(B.Y[i]) - 0.75, 1.5, 1.5);
+  }
+  f.end();
+
+  if (B.running) {
+    ctx.fillStyle = '#ffffff';
+    ctx.font = '12px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+    ctx.textAlign = 'left';
+    ctx.fillText('Computing sweep… ' + Math.round(B.progress * 100) + '%', STATE.W - 180, 36);
+  }
+}
+
+/* Poincaré Section */
+function drawPoincare() {
+  const m = STATE.model;
+  if (!m || m.n < 3) {
+    renderNotice('Poincaré cross-sections require at least a 3-dimensional system.');
+    return;
+  }
+  const plane = STATE.poincarePlane || 'z';
+  const planeVal = STATE.poincareVal !== undefined ? STATE.poincareVal : 27;
+  const pIdx = m.vars.indexOf(plane);
+  if (pIdx < 0) return;
+
+  const otherVars = m.vars.filter(v => v !== plane);
+  const v1 = otherVars[0], v2 = otherVars[1];
+  const idx1 = m.vars.indexOf(v1), idx2 = m.vars.indexOf(v2);
+
+  const seriesPlane = STATE.sim.y[pIdx];
+  const series1 = STATE.sim.y[idx1], series2 = STATE.sim.y[idx2];
+  const ptsX = [], ptsY = [];
+
+  for (let i = 1; i < seriesPlane.length; i++) {
+    const z0 = seriesPlane[i - 1], z1 = seriesPlane[i];
+    if (z0 < planeVal && z1 >= planeVal) {
+      const frac = (planeVal - z0) / (z1 - z0);
+      ptsX.push(series1[i - 1] + frac * (series1[i] - series1[i - 1]));
+      ptsY.push(series2[i - 1] + frac * (series2[i] - series2[i - 1]));
+    }
+  }
+
+  if (ptsX.length < 2) {
+    renderNotice('No plane crossings detected at ' + plane + ' = ' + planeVal + '. Adjust plane value above.');
+    return;
+  }
+
+  const f = drawFrame(getExtent([ptsX]), getExtent([ptsY]), v1 + ' (at ' + plane + ' = ' + planeVal + ')', v2);
+  ctx.fillStyle = '#ffffff';
+  for (let i = 0; i < ptsX.length; i++) {
+    ctx.beginPath();
+    ctx.arc(f.X(ptsX[i]), f.Y(ptsY[i]), 1.8, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+  f.end();
+
+  ctx.font = '11px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+  ctx.fillStyle = '#71717a';
+  ctx.textAlign = 'right';
+  ctx.fillText('Crossings: ' + ptsX.length, STATE.W - 30, 36);
+}
+
+/* Power Spectrum (FFT) */
+function drawFFT() {
+  const m = STATE.model;
+  if (!m || !STATE.sim) return;
+  const vIdx = STATE.fftVar || 0;
+  const rawData = STATE.sim.y[vIdx];
+  const N = 2048;
+  if (rawData.length < N) {
+    renderNotice('Simulating longer duration T needed for high-resolution FFT (at least 2048 samples).');
+    return;
+  }
+
+  const offset = rawData.length - N;
+  const real = new Float64Array(N), imag = new Float64Array(N);
+  let mean = 0;
+  for (let i = 0; i < N; i++) mean += rawData[offset + i];
+  mean /= N;
+  for (let i = 0; i < N; i++) real[i] = rawData[offset + i] - mean;
+
+  computeFFT(real, imag);
+
+  const halfN = N / 2;
+  const dt = STATE.sim.t[1] - STATE.sim.t[0];
+  const Fs = 1 / dt;
+  const freqs = new Float64Array(halfN);
+  const powerDB = new Float64Array(halfN);
+
+  for (let i = 0; i < halfN; i++) {
+    freqs[i] = (i * Fs) / N;
+    const magSq = real[i] * real[i] + imag[i] * imag[i];
+    powerDB[i] = 10 * Math.log10(magSq / N + 1e-12);
+  }
+
+  const f = drawFrame(getExtent([freqs]), getExtent([powerDB]), 'Frequency (Hz)', 'Power Spectral Density (dB)');
+  ctx.strokeStyle = '#a855f7';
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  for (let i = 0; i < halfN; i++) {
+    const x = f.X(freqs[i]), y = f.Y(powerDB[i]);
+    i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+  }
+  ctx.stroke();
+  f.end();
+
+  ctx.font = '11px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+  ctx.fillStyle = '#a855f7';
+  ctx.textAlign = 'left';
+  ctx.fillText('Power Spectrum (FFT): ' + m.vars[vIdx], STATE.W - 250, 36);
+}
+
+function renderNotice(msg) {
+  ctx.fillStyle = '#71717a';
+  ctx.font = '13px ' + getComputedStyle(document.body).getPropertyValue('--font-sans');
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(msg, STATE.W / 2, STATE.H / 2);
+}
+
+function draw() {
+  ctx.clearRect(0, 0, STATE.W, STATE.H);
+  if (!STATE.sim) {
+    renderNotice('Resolve syntax errors to view simulation.');
+    return;
+  }
+  if (STATE.sim.t.length < 2 && STATE.tab !== 'bif') {
+    renderNotice('Solution diverged immediately. Reduce dt or verify equations.');
+    return;
+  }
+
+  if (STATE.tab === 'phase') drawPhasePortrait();
+  else if (STATE.tab === '3d') draw3DAttractor();
+  else if (STATE.tab === 'series') drawTimeSeries();
+  else if (STATE.tab === 'div') drawSensitivity();
+  else if (STATE.tab === 'bif') drawBifurcation();
+  else if (STATE.tab === 'poincare') drawPoincare();
+  else if (STATE.tab === 'fft') drawFFT();
+
+  if (STATE.sim) {
+    $('stat-pts').textContent = STATE.sim.t.length.toLocaleString();
+    $('stat-t').textContent = STATE.sim.t[STATE.sim.t.length - 1].toFixed(1) + 's';
+  }
+}
+
+/* Animation Loop */
+function animationLoop(timestamp) {
+  const dtSec = (timestamp - lastAnimTime) / 1000;
+  lastAnimTime = timestamp;
+
+  let needsRedraw = false;
+  if (STATE.tab === '3d' && STATE.autoRotate && !STATE.drag && STATE.sim) {
+    STATE.yaw += 0.005;
+    needsRedraw = true;
+  }
+  if (STATE.animMode && STATE.animPlaying && STATE.sim) {
+    STATE.animProgress += (dtSec * 0.25 * STATE.animSpeed);
+    if (STATE.animProgress > 1.0) STATE.animProgress = 0.0;
+    $('playback-progress').value = STATE.animProgress;
+    needsRedraw = true;
+  }
+
+  if (needsRedraw) draw();
+  requestAnimationFrame(animationLoop);
+}
+requestAnimationFrame(animationLoop);
+
+/* Multi-Touch & Pointer Handlers */
+const activePointers = new Map();
+
+stage.addEventListener('pointerdown', e => {
+  if (e.target.closest('#hud-playback') || e.target.closest('.hud-top-right') || e.target.closest('.mobile-fab')) return;
+
+  activePointers.set(e.pointerId, {
+    x: e.clientX,
+    y: e.clientY,
+    startX: e.clientX,
+    startY: e.clientY,
+    button: e.button
+  });
+
+  try { cv.setPointerCapture(e.pointerId); } catch (_) {}
+
+  if (activePointers.size === 1) {
+    STATE.drag = true;
+    STATE.dragButton = e.button;
+    STATE.dragMoved = false;
+    STATE.lx = e.clientX;
+    STATE.ly = e.clientY;
+  } else if (activePointers.size === 2) {
+    const pts = Array.from(activePointers.values());
+    STATE.pinchDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    STATE.pinchMidX = (pts[0].x + pts[1].x) / 2;
+    STATE.pinchMidY = (pts[0].y + pts[1].y) / 2;
+    STATE.dragMoved = true;
+  }
+});
+
+stage.addEventListener('pointermove', e => {
+  if (STATE.lastFrame && STATE.tab === 'phase') {
+    const rect = cv.getBoundingClientRect();
+    const px = e.clientX - rect.left, py = e.clientY - rect.top;
+    const f = STATE.lastFrame;
+    if (px >= f.rect.l && px <= f.rect.l + f.rect.w && py >= f.rect.t && py <= f.rect.t + f.rect.h) {
+      $('stat-cursor').textContent = STATE.ax.x + ': ' + formatNum(f.invX(px)) + ', ' + STATE.ax.y + ': ' + formatNum(f.invY(py));
+    } else {
+      $('stat-cursor').textContent = '';
+    }
+  }
+
+  if (!activePointers.has(e.pointerId)) return;
+  const cur = activePointers.get(e.pointerId);
+  cur.x = e.clientX;
+  cur.y = e.clientY;
+
+  // Two-Finger Pinch-to-Zoom & Pan
+  if (activePointers.size === 2) {
+    const pts = Array.from(activePointers.values());
+    const curDist = Math.hypot(pts[0].x - pts[1].x, pts[0].y - pts[1].y);
+    if (STATE.pinchDist > 0 && curDist > 0) {
+      const scale = curDist / STATE.pinchDist;
+      if (STATE.tab === '3d') {
+        STATE.zoom = Math.max(0.15, Math.min(8.0, STATE.zoom * scale));
+      }
+      STATE.pinchDist = curDist;
+      const midX = (pts[0].x + pts[1].x) / 2;
+      const midY = (pts[0].y + pts[1].y) / 2;
+      if (STATE.tab === '3d') {
+        STATE.panX += (midX - STATE.pinchMidX);
+        STATE.panY += (midY - STATE.pinchMidY);
+      }
+      STATE.pinchMidX = midX;
+      STATE.pinchMidY = midY;
+      draw();
+    }
+    return;
+  }
+
+  // Single Pointer Drag (3D rotation or pan)
+  if (activePointers.size === 1 && STATE.drag) {
+    if (Math.hypot(e.clientX - cur.startX, e.clientY - cur.startY) > 5) {
+      STATE.dragMoved = true;
+    }
+    const dx = e.clientX - STATE.lx, dy = e.clientY - STATE.ly;
+    STATE.lx = e.clientX;
+    STATE.ly = e.clientY;
+
+    if (STATE.tab === '3d') {
+      if (STATE.dragButton === 0 && !e.shiftKey) {
+        STATE.yaw += dx * 0.008;
+        STATE.pitch = Math.max(-1.5, Math.min(1.5, STATE.pitch + dy * 0.008));
+      } else {
+        STATE.panX += dx;
+        STATE.panY += dy;
+      }
+      draw();
+    }
+  }
+});
+
+function handlePointerEnd(e) {
+  if (activePointers.has(e.pointerId)) {
+    const p = activePointers.get(e.pointerId);
+    const wasTap = !STATE.dragMoved && activePointers.size === 1;
+    activePointers.delete(e.pointerId);
+    try { cv.releasePointerCapture(e.pointerId); } catch (_) {}
+
+    // Tap to seed new trajectory in Phase Portrait
+    if (wasTap && STATE.tab === 'phase' && STATE.lastFrame && (p.button === 0 || p.button === undefined) && !e.shiftKey) {
+      const rect = cv.getBoundingClientRect();
+      const px = p.startX - rect.left, py = p.startY - rect.top;
+      const f = STATE.lastFrame;
+      if (px >= f.rect.l && px <= f.rect.l + f.rect.w && py >= f.rect.t && py <= f.rect.t + f.rect.h) {
+        seedNewTrajectory(f.invX(px), f.invY(py));
+      }
+    }
+  }
+
+  if (activePointers.size === 0) {
+    STATE.drag = false;
+    STATE.dragMoved = false;
+  } else if (activePointers.size === 1) {
+    const remaining = activePointers.values().next().value;
+    STATE.lx = remaining.x;
+    STATE.ly = remaining.y;
+  }
+}
+
+stage.addEventListener('pointerup', handlePointerEnd);
+stage.addEventListener('pointercancel', handlePointerEnd);
+
+stage.addEventListener('wheel', e => {
+  if (STATE.tab === '3d') {
+    e.preventDefault();
+    const zoomFactor = e.deltaY < 0 ? 1.08 : 0.92;
+    STATE.zoom = Math.max(0.2, Math.min(6.0, STATE.zoom * zoomFactor));
+    draw();
+  }
+}, { passive: false });
+
+function seedNewTrajectory(xVal, yVal) {
+  if (!STATE.model) return;
+  const m = STATE.model;
+  const newICs = Float64Array.from(m.ics);
+  const xi = m.vars.indexOf(STATE.ax.x), yi = m.vars.indexOf(STATE.ax.y);
+  if (xi >= 0) newICs[xi] = xVal;
+  if (yi >= 0) newICs[yi] = yVal;
+
+  const dt = +$('dt').value, T = +$('T').value;
+  const extraSim = simulate(m, dt, T, newICs, STATE.solver);
+  STATE.extraTrajs.push(extraSim);
+  if (STATE.extraTrajs.length > 8) STATE.extraTrajs.shift();
+  draw();
+  showToast('Seeded orbit at (' + formatNum(xVal) + ', ' + formatNum(yVal) + ')');
+}
+
+function spawnSwarm() {
+  if (!STATE.model) return;
+  const m = STATE.model;
+  STATE.swarmTrajs = [];
+  const dt = +$('dt').value, T = +$('T').value;
+  for (let k = 0; k < 25; k++) {
+    const pert = m.ics.map(v => v + (Math.random() - 0.5) * 0.4);
+    STATE.swarmTrajs.push(simulate(m, dt, T, pert, STATE.solver));
+  }
+  draw();
+  showToast('Spawned ensemble of 25 particles.');
+}
+
+/* ==========================================================================
+   7. UI TABS & TOOLBAR
+   ========================================================================== */
+const TABS_CONFIG = [
+  { id: 'phase', label: 'PHASE PORTRAIT' },
+  { id: '3d', label: '3D ATTRACTOR' },
+  { id: 'series', label: 'TIME SERIES' },
+  { id: 'div', label: 'SENSITIVITY' },
+  { id: 'bif', label: 'BIFURCATION' },
+  { id: 'poincare', label: 'POINCARÉ' },
+  { id: 'fft', label: 'FFT SPECTRUM' }
+];
+
+function buildTabs() {
+  const container = $('tabs');
+  container.innerHTML = '';
+  TABS_CONFIG.forEach(t => {
+    const b = document.createElement('button');
+    b.className = 'tab-btn' + (t.id === STATE.tab ? ' active' : '');
+    b.textContent = t.label;
+    b.onclick = () => {
+      STATE.tab = t.id;
+      buildTabs();
+      buildOptionsBar();
+      draw();
+      writeUrlHash();
+    };
+    container.appendChild(b);
+  });
+}
+
+function createSelect(options, current, onChange) {
+  const sel = document.createElement('select');
+  options.forEach(opt => {
+    const o = document.createElement('option');
+    o.value = opt;
+    o.textContent = opt;
+    if (opt === current) o.selected = true;
+    sel.appendChild(o);
+  });
+  sel.onchange = () => onChange(sel.value);
+  return sel;
+}
+
+function buildOptionsBar() {
+  const left = $('opts-left'), right = $('opts-right');
+  left.innerHTML = '';
+  right.innerHTML = '';
+  const m = STATE.model;
+  if (!m) return;
+
+  const names = m.n >= 3 ? m.vars : [...m.vars, 't'];
+  const allVars = [...m.vars, 't'];
+
+  $('hud-playback').style.display = (STATE.animMode && (STATE.tab === '3d' || STATE.tab === 'phase')) ? 'flex' : 'none';
+
+  if (STATE.tab === 'phase') {
+    const grpX = document.createElement('div');
+    grpX.className = 'opt-item';
+    grpX.innerHTML = '<span>X:</span>';
+    grpX.appendChild(createSelect(allVars, STATE.ax.x, v => { STATE.ax.x = v; draw(); writeUrlHash(); }));
+    left.appendChild(grpX);
+
+    const grpY = document.createElement('div');
+    grpY.className = 'opt-item';
+    grpY.innerHTML = '<span>Y:</span>';
+    grpY.appendChild(createSelect(allVars, STATE.ax.y, v => { STATE.ax.y = v; draw(); writeUrlHash(); }));
+    left.appendChild(grpY);
+
+    const vfLabel = document.createElement('label');
+    vfLabel.className = 'opt-item toggle-pill';
+    vfLabel.innerHTML = `<input type="checkbox" ${STATE.vectorFieldOn ? 'checked' : ''}> Vector Field`;
+    vfLabel.querySelector('input').onchange = e => { STATE.vectorFieldOn = e.target.checked; draw(); };
+    left.appendChild(vfLabel);
+
+    const ncLabel = document.createElement('label');
+    ncLabel.className = 'opt-item toggle-pill';
+    ncLabel.innerHTML = `<input type="checkbox" ${STATE.nullclinesOn ? 'checked' : ''}> Nullclines`;
+    ncLabel.querySelector('input').onchange = e => { STATE.nullclinesOn = e.target.checked; draw(); };
+    left.appendChild(ncLabel);
+
+    const eqLabel = document.createElement('label');
+    eqLabel.className = 'opt-item toggle-pill';
+    eqLabel.innerHTML = `<input type="checkbox" ${STATE.showEquilibriaOnPhase ? 'checked' : ''}> Fixed Points`;
+    eqLabel.querySelector('input').onchange = e => { STATE.showEquilibriaOnPhase = e.target.checked; draw(); };
+    left.appendChild(eqLabel);
+
+    const swarmBtn = document.createElement('button');
+    swarmBtn.textContent = 'Spawn Swarm';
+    swarmBtn.onclick = spawnSwarm;
+    right.appendChild(swarmBtn);
+
+    if (STATE.extraTrajs.length > 0 || STATE.swarmTrajs.length > 0) {
+      const clearBtn = document.createElement('button');
+      clearBtn.textContent = 'Clear Extra';
+      clearBtn.onclick = () => { STATE.extraTrajs = []; STATE.swarmTrajs = []; draw(); };
+      right.appendChild(clearBtn);
+    }
+  } else if (STATE.tab === '3d') {
+    ['x', 'y', 'z'].forEach(axis => {
+      const grp = document.createElement('div');
+      grp.className = 'opt-item';
+      grp.innerHTML = `<span>${axis.toUpperCase()}:</span>`;
+      grp.appendChild(createSelect(names, STATE.ax[axis], v => { STATE.ax[axis] = v; draw(); writeUrlHash(); }));
+      left.appendChild(grp);
+    });
+
+    const autoLabel = document.createElement('label');
+    autoLabel.className = 'opt-item toggle-pill';
+    autoLabel.innerHTML = `<input type="checkbox" ${STATE.autoRotate ? 'checked' : ''}> Auto-Spin`;
+    autoLabel.querySelector('input').onchange = e => { STATE.autoRotate = e.target.checked; };
+    left.appendChild(autoLabel);
+
+    const animLabel = document.createElement('label');
+    animLabel.className = 'opt-item toggle-pill';
+    animLabel.innerHTML = `<input type="checkbox" ${STATE.animMode ? 'checked' : ''}> Comet Animation`;
+    animLabel.querySelector('input').onchange = e => {
+      STATE.animMode = e.target.checked;
+      $('hud-playback').style.display = STATE.animMode ? 'flex' : 'none';
+      draw();
+    };
+    left.appendChild(animLabel);
+  } else if (STATE.tab === 'poincare') {
+    const plLabel = document.createElement('div');
+    plLabel.className = 'opt-item';
+    plLabel.innerHTML = '<span>Piercing Plane:</span>';
+    plLabel.appendChild(createSelect(m.vars, STATE.poincarePlane || m.vars[m.n - 1], v => { STATE.poincarePlane = v; draw(); }));
+    left.appendChild(plLabel);
+
+    const valLabel = document.createElement('div');
+    valLabel.className = 'opt-item';
+    valLabel.innerHTML = `<span>At Value:</span><input type="number" step="any" value="${STATE.poincareVal || 27}" style="width:68px;background:var(--bg-elevated);color:#fff;border:1px solid var(--border-subtle);border-radius:4px;padding:2px 6px">`;
+    valLabel.querySelector('input').onchange = e => { STATE.poincareVal = +e.target.value; draw(); };
+    left.appendChild(valLabel);
+  } else if (STATE.tab === 'fft') {
+    const fftVarSelect = document.createElement('div');
+    fftVarSelect.className = 'opt-item';
+    fftVarSelect.innerHTML = '<span>Variable:</span>';
+    fftVarSelect.appendChild(createSelect(m.vars, m.vars[STATE.fftVar || 0], v => { STATE.fftVar = m.vars.indexOf(v); draw(); }));
+    left.appendChild(fftVarSelect);
+  } else if (STATE.tab === 'bif') {
+    if (!m.pnames.length) {
+      left.innerHTML = '<span style="color:var(--text-muted)">Add a model parameter (e.g. <code>a = 1.0</code>) to compute a bifurcation diagram.</span>';
+      return;
+    }
+    const B = STATE.bifCfg;
+    if (B.pi >= m.pnames.length) B.pi = 0;
+    if (B.vi >= m.n) B.vi = 0;
+
+    const paramGrp = document.createElement('div');
+    paramGrp.className = 'opt-item';
+    paramGrp.innerHTML = '<span>Sweep:</span>';
+    paramGrp.appendChild(createSelect(m.pnames, m.pnames[B.pi], v => {
+      B.pi = m.pnames.indexOf(v);
+      const val = m.p[B.pi];
+      B.a = +(val * 0.5).toPrecision(3);
+      B.b = +(val * 1.5 + (val === 0 ? 1 : 0)).toPrecision(3);
+      buildOptionsBar();
+    }));
+    left.appendChild(paramGrp);
+
+    const fromGrp = document.createElement('div');
+    fromGrp.className = 'opt-item';
+    fromGrp.innerHTML = `<span>From:</span><input type="number" step="any" value="${B.a}" style="width:64px;background:var(--bg-elevated);color:#fff;border:1px solid var(--border-subtle);border-radius:4px;padding:2px 6px">`;
+    fromGrp.querySelector('input').onchange = e => { B.a = +e.target.value; };
+    left.appendChild(fromGrp);
+
+    const toGrp = document.createElement('div');
+    toGrp.className = 'opt-item';
+    toGrp.innerHTML = `<span>To:</span><input type="number" step="any" value="${B.b}" style="width:64px;background:var(--bg-elevated);color:#fff;border:1px solid var(--border-subtle);border-radius:4px;padding:2px 6px">`;
+    toGrp.querySelector('input').onchange = e => { B.b = +e.target.value; };
+    left.appendChild(toGrp);
+
+    const varGrp = document.createElement('div');
+    varGrp.className = 'opt-item';
+    varGrp.innerHTML = '<span>Record:</span>';
+    varGrp.appendChild(createSelect(m.vars, m.vars[B.vi], v => { B.vi = m.vars.indexOf(v); }));
+    left.appendChild(varGrp);
+
+    const computeBtn = document.createElement('button');
+    computeBtn.className = 'primary';
+    computeBtn.textContent = 'Compute Sweep';
+    computeBtn.onclick = triggerBifurcationComputation;
+    right.appendChild(computeBtn);
+  }
+}
+
+async function triggerBifurcationComputation() {
+  const m = STATE.model, B = STATE.bifCfg;
+  if (!m) return;
+  const dt = +$('dt').value, T = +$('T').value;
+  const token = {};
+  STATE.bifTok = token;
+  STATE.bif = {
+    X: [],
+    Y: [],
+    xr: [Math.min(B.a, B.b), Math.max(B.a, B.b)],
+    pname: m.pnames[B.pi],
+    vname: m.vars[B.vi],
+    running: true,
+    progress: 0
+  };
+  draw();
+
+  const res = await bifurcate(m, B.pi, B.a, B.b, Math.max(10, Math.min(1200, B.N | 0)), B.vi, dt, T, (p, X, Y) => {
+    if (STATE.bifTok !== token) return false;
+    STATE.bif.progress = p;
+    STATE.bif.X = X;
+    STATE.bif.Y = Y;
+    draw();
+    return true;
+  });
+
+  if (STATE.bifTok === token && res) {
+    STATE.bif.running = false;
+    STATE.bif.X = res.X;
+    STATE.bif.Y = res.Y;
+    draw();
+  }
+}
+
+function buildParameterSliders() {
+  const container = $('params-box');
+  container.innerHTML = '';
+  const m = STATE.model;
+  if (!m || !m.pnames.length) {
+    container.innerHTML = '<div style="color:var(--text-dim);font-size:11.5px;padding:4px 0">No model parameters declared. Example: <code>sigma = 10</code></div>';
+    return;
+  }
+
+  m.pnames.forEach((pname, idx) => {
+    const val = m.p[idx];
+    const card = document.createElement('div');
+    card.className = 'prm-card';
+
+    let span = Math.max(Math.abs(val), 1);
+    let minBound = val - span, maxBound = val + span;
+
+    card.innerHTML = `
+      <div class="prm-top">
+        <span class="prm-name">${pname}</span>
+        <div class="prm-actions">
+          <button class="prm-range-btn" title="Shrink slider range">[-]</button>
+          <button class="prm-range-btn" title="Expand slider range">[+]</button>
+          <input class="prm-val-input" type="number" step="any" value="${+val.toPrecision(6)}">
+        </div>
+      </div>
+      <div class="prm-slider-row">
+        <span class="prm-bound left">${formatNum(minBound)}</span>
+        <input type="range" min="${minBound}" max="${maxBound}" step="${span / 400}" value="${val}">
+        <span class="prm-bound right">${formatNum(maxBound)}</span>
+      </div>
+    `;
+
+    const slider = card.querySelector('input[type=range]');
+    const numInput = card.querySelector('.prm-val-input');
+    const minSpan = card.querySelector('.prm-bound.left');
+    const maxSpan = card.querySelector('.prm-bound.right');
+    const btnShrink = card.querySelectorAll('.prm-range-btn')[0];
+    const btnExpand = card.querySelectorAll('.prm-range-btn')[1];
+
+    const updateSourceText = newVal => {
+      if (!isFinite(newVal)) return;
+      const re = new RegExp('^(\\s*' + pname + '\\s*=\\s*)([^\\n#]*)', 'm');
+      $('src').value = $('src').value.replace(re, (match, prefix) => prefix + String(+newVal.toPrecision(6)));
+      STATE.skipSliderRebuild = true;
+      scheduleRun(0);
+    };
+
+    slider.oninput = () => {
+      const v = +slider.value;
+      numInput.value = +v.toPrecision(6);
+      updateSourceText(v);
+    };
+
+    numInput.onchange = () => {
+      const v = +numInput.value;
+      if (v < +slider.min) { slider.min = v - Math.abs(v)*0.5; minSpan.textContent = formatNum(+slider.min); }
+      if (v > +slider.max) { slider.max = v + Math.abs(v)*0.5; maxSpan.textContent = formatNum(+slider.max); }
+      slider.value = v;
+      updateSourceText(v);
+    };
+
+    btnExpand.onclick = () => {
+      span *= 1.8;
+      const cur = +slider.value;
+      slider.min = cur - span; slider.max = cur + span;
+      slider.step = span / 400;
+      minSpan.textContent = formatNum(+slider.min);
+      maxSpan.textContent = formatNum(+slider.max);
+    };
+
+    btnShrink.onclick = () => {
+      span = Math.max(span * 0.55, 0.001);
+      const cur = +slider.value;
+      slider.min = cur - span; slider.max = cur + span;
+      slider.step = span / 400;
+      minSpan.textContent = formatNum(+slider.min);
+      maxSpan.textContent = formatNum(+slider.max);
+    };
+
+    container.appendChild(card);
+  });
+}
+
+function updateDiagnosticsHUD() {
+  const L = STATE.lyap, box = $('diagnostics-content'), tag = $('chaos-tag');
+  let badgeClass = 'stable', badgeText = 'STABLE FIXED POINT', expl = '', fillWidth = '10%';
+
+  if (STATE.sim && STATE.sim.diverged) {
+    box.innerHTML = `
+      <div style="color:#ffffff;font-weight:600">Solution diverged at t ≈ ${formatNum(STATE.sim.t[STATE.sim.t.length - 1])}</div>
+      <div class="diag-expl">The system experienced numeric overflow. Try decreasing <code>dt</code> or switching to adaptive RK45 Dormand-Prince.</div>
+    `;
+    tag.className = 'lyap-badge chaos';
+    tag.textContent = 'DIVERGED';
+    return;
+  }
+
+  if (!isFinite(L)) {
+    box.innerHTML = `<div class="diag-expl">Lyapunov exponent computation not available for this regime.</div>`;
+    tag.className = 'lyap-badge';
+    tag.textContent = 'UNBOUNDED';
+    return;
+  }
+
+  let fillColor = '#10b981';
+  if (L > 0.03) {
+    badgeClass = 'chaos';
+    badgeText = 'CHAOTIC ATTRACTOR';
+    fillColor = '#f43f5e';
+    fillWidth = Math.min(100, Math.max(15, L * 60)) + '%';
+    const horizon = Math.log(1e6) / L;
+    expl = `Nearby orbits separate exponentially at rate <b>λ ≈ ${L.toFixed(4)}</b>.<br>
+    Predictability horizon: a micro perturbation of 10⁻⁶ grows macroscopically in approximately <b>${formatNum(horizon)}</b> time units.`;
+  } else if (L < -0.03) {
+    badgeClass = 'stable';
+    badgeText = 'STABLE ATTRACTOR';
+    fillColor = '#10b981';
+    fillWidth = '20%';
+    expl = `Negative spectrum (<b>λ ≈ ${L.toFixed(4)}</b>): perturbations decay exponentially towards a limit cycle or stable fixed point.`;
+  } else {
+    badgeClass = 'periodic';
+    badgeText = 'PERIODIC / NEUTRAL';
+    fillColor = '#38bdf8';
+    fillWidth = '40%';
+    expl = `Near-zero exponent indicates a regular periodic limit cycle, quasi-periodic torus, or conservative Hamiltonian flow.`;
+  }
+
+  tag.className = 'lyap-badge ' + badgeClass;
+  tag.textContent = badgeText;
+
+  box.innerHTML = `
+    <div class="lyap-meter">
+      <div class="lyap-value-wrap">
+        <span class="lyap-label">Largest Lyapunov Exponent</span>
+        <span class="lyap-number" style="color:${fillColor}">${L >= 0 ? '+' : ''}${L.toFixed(4)}</span>
+      </div>
+    </div>
+    <div class="diag-bar-track">
+      <div class="diag-bar-fill" style="width:${fillWidth};background:${fillColor}"></div>
+    </div>
+    <div class="diag-expl">${expl}</div>
+    <div class="diag-meta">Estimated via Benettin algorithm over T = ${formatNum(STATE.lyapT)}, Solver: ${STATE.solver.toUpperCase()}</div>
+  `;
+}
+
+/* ==========================================================================
+   8. COMPILATION & EXECUTION
+   ========================================================================== */
+function executeSimulation() {
+  $('err').style.display = 'none';
+  $('note').style.display = 'none';
+  $('eq-badge').className = 'badge-status';
+  $('eq-badge').textContent = 'Compiling…';
+
+  let model;
+  try {
+    model = parseModel($('src').value);
+  } catch (err) {
+    $('err').textContent = err.message;
+    $('err').style.display = 'block';
+    $('eq-badge').className = 'badge-status err';
+    $('eq-badge').textContent = 'Syntax Error';
+    return;
+  }
+
+  const dt = +$('dt').value, T = +$('T').value;
+  if (!(dt > 0) || !(T > 0)) {
+    $('err').textContent = 'Step size dt and duration T must be positive numbers.';
+    $('err').style.display = 'block';
+    return;
+  }
+
+  STATE.model = model;
+  STATE.solver = $('solver-select').value;
+  $('eq-badge').className = 'badge-status';
+  $('eq-badge').textContent = model.n + ' Variables';
+
+  if (model.notices.length) {
+    $('note').textContent = model.notices.join(' • ');
+    $('note').style.display = 'block';
+  }
+
+  const names = model.n >= 3 ? model.vars : [...model.vars, 't'];
+  const allVars = [...model.vars, 't'];
+  if (!allVars.includes(STATE.ax.x)) STATE.ax.x = model.vars[0];
+  if (!allVars.includes(STATE.ax.y)) STATE.ax.y = model.vars[1] || 't';
+  if (!names.includes(STATE.ax.z) || !STATE.ax.z) STATE.ax.z = names[2] || names[0];
+
+  STATE.sim = simulate(model, dt, T, null, STATE.solver);
+
+  const u = 1 / Math.sqrt(model.n);
+  STATE.twin = simulate(model, dt, T, model.ics.map(v => v + 1e-6 * u), STATE.solver);
+
+  const lyapHorizon = Math.min(Math.max(T, 250), dt * 800000);
+  STATE.lyap = lyapunov(model, dt, lyapHorizon);
+  STATE.lyapT = lyapHorizon;
+
+  try {
+    STATE.equilibria = findEquilibria(model);
+  } catch (e) {
+    STATE.equilibria = [];
+  }
+
+  updateDiagnosticsHUD();
+  if (!STATE.skipSliderRebuild) buildParameterSliders();
+  STATE.skipSliderRebuild = false;
+
+  buildOptionsBar();
+  draw();
+  writeUrlHash();
+}
+
+function scheduleRun(ms) {
+  clearTimeout(scheduleTimer);
+  scheduleTimer = setTimeout(executeSimulation, ms === undefined ? 300 : ms);
+}
+
+function updateLineNumbers() {
+  const lines = $('src').value.split('\n').length;
+  let nums = '';
+  for (let i = 1; i <= Math.max(lines, 9); i++) nums += i + '<br>';
+  $('line-numbers').innerHTML = nums;
+}
+
+/* ==========================================================================
+   9. URL SHARING & EXPORTERS
+   ========================================================================== */
+function writeUrlHash() {
+  try {
+    const payload = {
+      s: $('src').value,
+      dt: +$('dt').value,
+      T: +$('T').value,
+      solver: STATE.solver,
+      tab: STATE.tab,
+      ax: STATE.ax,
+      yaw: +STATE.yaw.toFixed(3),
+      pitch: +STATE.pitch.toFixed(3)
+    };
+    const json = JSON.stringify(payload);
+    const b64 = btoa(unescape(encodeURIComponent(json)));
+    history.replaceState(null, '', '#' + b64);
+  } catch (e) {}
+}
+
+function readUrlHash() {
+  try {
+    if (location.hash.length < 5) return false;
+    const json = decodeURIComponent(escape(atob(location.hash.slice(1))));
+    const o = JSON.parse(json);
+    if (typeof o.s !== 'string') return false;
+    $('src').value = o.s;
+    $('dt').value = o.dt || 0.005;
+    $('T').value = o.T || 60;
+    if (o.solver) $('solver-select').value = o.solver;
+    STATE.tab = o.tab || 'phase';
+    if (o.ax) STATE.ax = Object.assign(STATE.ax, o.ax);
+    if (o.yaw !== undefined) STATE.yaw = o.yaw;
+    if (o.pitch !== undefined) STATE.pitch = o.pitch;
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function showToast(msg) {
+  $('toast-msg').textContent = msg;
+  const t = $('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+$('btn-share').onclick = async () => {
+  writeUrlHash();
+  try {
+    await navigator.clipboard.writeText(location.href);
+    showToast('Link copied to clipboard.');
+  } catch (err) {
+    prompt('Copy your runnable model URL:', location.href);
+  }
+};
+
+function triggerDownload(filename, text, mime = 'text/plain') {
+  const blob = new Blob([text], { type: mime });
+  const u = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = u;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 3000);
+}
+
+function exportMatlabCode() {
+  const m = STATE.model;
+  if (!m) return;
+  const dt = $('dt').value, T = $('T').value;
+  let code = `%% =========================================================================\n`;
+  code += `%% Generated by Dynamics Lab (Nonlinear Dynamics & Chaos Engine)\n`;
+  code += `%% Run directly in MATLAB or GNU Octave\n`;
+  code += `%% =========================================================================\n\n`;
+  code += `function run_simulation()\n`;
+  code += `    tspan = [0 ${T}];\n`;
+  code += `    y0 = [${m.ics.join('; ')}];\n\n`;
+  code += `    options = odeset('RelTol', 1e-6, 'AbsTol', 1e-8);\n`;
+  code += `    [t, y] = ode45(@derivatives, tspan, y0, options);\n\n`;
+  code += `    figure('Name', 'Dynamics Lab Simulation', 'Color', [0.05 0.05 0.06]);\n`;
+  if (m.n >= 3) {
+    code += `    plot3(y(:,1), y(:,2), y(:,3), 'Color', [1 1 1], 'LineWidth', 1.2);\n`;
+    code += `    grid on; xlabel('${m.vars[0]}'); ylabel('${m.vars[1]}'); zlabel('${m.vars[2]}');\n`;
+    code += `    title('3D Attractor Phase Space', 'Color', 'w');\n`;
+  } else {
+    code += `    plot(y(:,1), y(:,2), 'Color', [1 1 1], 'LineWidth', 1.4);\n`;
+    code += `    grid on; xlabel('${m.vars[0]}'); ylabel('${m.vars[1]}');\n`;
+    code += `    title('2D Phase Portrait', 'Color', 'w');\n`;
+  }
+  code += `    set(gca, 'Color', [0 0 0], 'XColor', [0.7 0.7 0.7], 'YColor', [0.7 0.7 0.7]);\n`;
+  code += `end\n\n`;
+  code += `function dydt = derivatives(t, y__)\n`;
+  m.vars.forEach((v, i) => { code += `    ${v} = y__(${i + 1});\n`; });
+  m.pnames.forEach((p, i) => { code += `    ${p} = ${m.p[i]};\n`; });
+  code += `    dydt = zeros(${m.n}, 1);\n`;
+  m.eqs.forEach((eq, i) => {
+    let cleanSrc = eq.src.replace(/\^/g, '.^');
+    code += `    dydt(${i + 1}) = ${cleanSrc};\n`;
+  });
+  code += `end\n`;
+  triggerDownload('dynamics_model.m', code, 'text/x-matlab');
+  showToast('MATLAB (.m) code exported.');
+}
+
+function exportPythonCode() {
+  const m = STATE.model;
+  if (!m) return;
+  const T = $('T').value;
+  let code = `# =========================================================================\n`;
+  code += `# Generated by Dynamics Lab (Nonlinear Dynamics & Chaos Engine)\n`;
+  code += `# Requires: numpy, scipy, matplotlib\n`;
+  code += `# =========================================================================\n\n`;
+  code += `import numpy as np\n`;
+  code += `from scipy.integrate import solve_ivp\n`;
+  code += `import matplotlib.pyplot as plt\n\n`;
+  code += `def derivatives(t, state):\n`;
+  m.vars.forEach((v, i) => { code += `    ${v} = state[${i}]\n`; });
+  m.pnames.forEach((p, i) => { code += `    ${p} = ${m.p[i]}\n`; });
+  const derivReturns = m.eqs.map(e => e.src.replace(/\^/g, '**')).join(', ');
+  code += `    return [${derivReturns}]\n\n`;
+  code += `y0 = [${m.ics.join(', ')}]\nt_span = (0, ${T})\nt_eval = np.linspace(0, ${T}, 15000)\n\n`;
+  code += `sol = solve_ivp(derivatives, t_span, y0, t_eval=t_eval, rtol=1e-6, atol=1e-8, method='RK45')\n\n`;
+  code += `plt.figure(figsize=(9, 6), facecolor='#09090b')\n`;
+  if (m.n >= 3) {
+    code += `ax = plt.axes(projection='3d', facecolor='#000000')\n`;
+    code += `ax.plot(sol.y[0], sol.y[1], sol.y[2], color='#ffffff', lw=1)\n`;
+    code += `ax.set_xlabel('${m.vars[0]}', color='w'); ax.set_ylabel('${m.vars[1]}', color='w'); ax.set_zlabel('${m.vars[2]}', color='w')\n`;
+  } else {
+    code += `ax = plt.axes(facecolor='#000000')\n`;
+    code += `plt.plot(sol.y[0], sol.y[1], color='#ffffff', lw=1.4)\n`;
+    code += `plt.xlabel('${m.vars[0]}', color='w'); plt.ylabel('${m.vars[1]}', color='w')\n`;
+  }
+  code += `plt.title('Dynamics Lab Simulation', color='w')\nplt.grid(alpha=0.15)\nplt.show()\n`;
+  triggerDownload('dynamics_model.py', code, 'text/x-python');
+  showToast('Python script exported.');
+}
+
+$('btn-export-dropdown').onclick = e => {
+  e.stopPropagation();
+  $('export-menu').classList.toggle('show');
+};
+window.addEventListener('click', () => $('export-menu').classList.remove('show'));
+
+$('export-matlab').onclick = exportMatlabCode;
+$('export-python').onclick = exportPythonCode;
+$('export-csv').onclick = () => {
+  if (!STATE.sim) return;
+  let csv = 't,' + STATE.model.vars.join(',') + '\n';
+  for (let i = 0; i < STATE.sim.t.length; i++) {
+    csv += STATE.sim.t[i] + ',' + STATE.sim.y.map(arr => arr[i]).join(',') + '\n';
+  }
+  triggerDownload('trajectory.csv', csv, 'text/csv');
+  showToast('CSV trajectory exported.');
+};
+$('export-png').onclick = () => {
+  const dataUrl = cv.toDataURL('image/png');
+  const a = document.createElement('a');
+  a.href = dataUrl;
+  a.download = 'dynamics-lab-simulation.png';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  showToast('Snapshot downloaded.');
+};
+
+/* Equilibria Modal */
+$('btn-equilibria').onclick = () => {
+  const modal = $('modal-equilibria');
+  const body = $('equilibria-body');
+  modal.classList.add('open');
+
+  if (!STATE.model) {
+    body.innerHTML = '<p>Define equations to calculate equilibria.</p>';
+    return;
+  }
+  const eqs = STATE.equilibria;
+  if (!eqs.length) {
+    body.innerHTML = `
+      <h4>No Isolated Real Equilibria Found</h4>
+      <p>Newton-Raphson search did not detect stationary points within typical bounds.</p>
+    `;
+    return;
+  }
+
+  let html = `<h4>Discovered Fixed Points (${eqs.length})</h4>`;
+  html += `<div class="eq-table-wrap"><table class="eq-table"><thead><tr><th>Point</th><th>Coordinates (${STATE.model.vars.join(', ')})</th><th>Stability Classification</th><th>Eigenvalues (λ)</th></tr></thead><tbody>`;
+
+  eqs.forEach((eq, idx) => {
+    let evStr = eq.eigenvalues.map(e => {
+      if (Math.abs(e.i) < 1e-4) return e.r.toFixed(3);
+      return `${e.r.toFixed(3)} ± ${Math.abs(e.i).toFixed(3)}i`;
+    }).join(', ');
+    html += `<tr><td>#${idx + 1}</td><td>(${eq.coords.join(', ')})</td><td><b>${eq.stability}</b></td><td>${evStr || 'N/A'}</td></tr>`;
+  });
+  html += `</tbody></table></div>`;
+  body.innerHTML = html;
+};
+
+$('modal-eq-close').onclick = () => $('modal-equilibria').classList.remove('open');
+$('modal-equilibria').onclick = e => { if (e.target === $('modal-equilibria')) $('modal-equilibria').classList.remove('open'); };
+
+/* HUD Buttons */
+$('btn-reset-cam').onclick = () => {
+  STATE.yaw = 0.65;
+  STATE.pitch = 0.38;
+  STATE.zoom = 1.0;
+  STATE.panX = 0;
+  STATE.panY = 0;
+  draw();
+  showToast('Camera reset.');
+};
+
+$('btn-fullscreen').onclick = () => {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen();
+  else document.exitFullscreen();
+};
+
+/* Playback */
+$('btn-play-pause').onclick = () => {
+  STATE.animPlaying = !STATE.animPlaying;
+  $('btn-play-pause').textContent = STATE.animPlaying ? '▶' : '❚❚';
+};
+
+$('playback-progress').oninput = e => {
+  STATE.animProgress = +e.target.value;
+  draw();
+};
+
+$('playback-speed').onchange = e => {
+  STATE.animSpeed = +e.target.value;
+};
+
+/* Help Modal */
+$('btn-help').onclick = () => $('modal-help').classList.add('open');
+$('modal-close').onclick = () => $('modal-help').classList.remove('open');
+$('modal-help').onclick = e => { if (e.target === $('modal-help')) $('modal-help').classList.remove('open'); };
+
+/* Syntax Chips */
+document.querySelectorAll('.chip').forEach(c => {
+  c.onclick = () => {
+    const text = c.dataset.insert;
+    const src = $('src');
+    const start = src.selectionStart, end = src.selectionEnd;
+    src.value = src.value.substring(0, start) + text + src.value.substring(end);
+    src.focus();
+    src.selectionStart = src.selectionEnd = start + text.length;
+    updateLineNumbers();
+    scheduleRun();
+  };
+});
+
+/* ==========================================================================
+   10. BOOTSTRAP
+   ========================================================================== */
+function initPresets() {
+  const p = $('preset');
+  p.innerHTML = '';
+  const categories = {};
+  PRESETS.forEach((preset, idx) => {
+    if (!categories[preset.category]) {
+      categories[preset.category] = document.createElement('optgroup');
+      categories[preset.category].label = preset.category;
+      p.appendChild(categories[preset.category]);
+    }
+    const opt = document.createElement('option');
+    opt.value = idx;
+    opt.textContent = preset.name;
+    categories[preset.category].appendChild(opt);
+  });
+
+  const customOpt = document.createElement('option');
+  customOpt.value = 'custom';
+  customOpt.textContent = 'Custom System (User Defined)';
+  p.appendChild(customOpt);
+
+  p.onchange = () => {
+    if (p.value === 'custom') return;
+    const x = PRESETS[+p.value];
+    $('src').value = x.text;
+    $('dt').value = x.dt;
+    $('T').value = x.T;
+    STATE.tab = x.tab;
+    STATE.ax = { x: '', y: '', z: '' };
+    STATE.extraTrajs = [];
+    STATE.swarmTrajs = [];
+    STATE.bif = null;
+    STATE.bifTok = {};
+    updateLineNumbers();
+    buildTabs();
+    executeSimulation();
+  };
+}
+
+$('src').addEventListener('input', () => {
+  $('preset').value = 'custom';
+  updateLineNumbers();
+  scheduleRun();
+});
+$('dt').addEventListener('input', () => scheduleRun());
+$('T').addEventListener('input', () => scheduleRun());
+$('solver-select').addEventListener('change', () => executeSimulation());
+
+window.addEventListener('keydown', e => {
+  if (e.code === 'Space' && (e.target.tagName !== 'TEXTAREA' && e.target.tagName !== 'INPUT')) {
+    e.preventDefault();
+    STATE.animPlaying = !STATE.animPlaying;
+    $('btn-play-pause').textContent = STATE.animPlaying ? '▶' : '❚❚';
+  }
+  if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+    e.preventDefault();
+    executeSimulation();
+    showToast('Simulation updated.');
+  }
+});
+
+// Mobile View Toggling
+function setMobileView(view) {
+  STATE.mobileView = view;
+  const main = document.querySelector('main');
+  const btnToggleText = $('mobile-toggle-text');
+  if (view === 'aside') {
+    main.classList.remove('show-stage');
+    main.classList.add('show-aside');
+    if (btnToggleText) btnToggleText.textContent = 'Simulation';
+  } else {
+    main.classList.remove('show-aside');
+    main.classList.add('show-stage');
+    if (btnToggleText) btnToggleText.textContent = 'Equations';
+    setTimeout(() => {
+      resizeCanvas();
+    }, 40);
+  }
+}
+
+if ($('btn-mobile-toggle')) {
+  $('btn-mobile-toggle').onclick = () => {
+    setMobileView(STATE.mobileView === 'aside' ? 'stage' : 'aside');
+  };
+}
+if ($('btn-mobile-show-controls')) {
+  $('btn-mobile-show-controls').onclick = () => {
+    setMobileView('aside');
+  };
+}
+if ($('btn-mobile-show-sim')) {
+  $('btn-mobile-show-sim').onclick = () => {
+    setMobileView('stage');
+  };
+}
+
+// Boot
+setMobileView('stage');
+initPresets();
+if (readUrlHash()) {
+  $('preset').value = 'custom';
+  updateLineNumbers();
+  buildTabs();
+  executeSimulation();
+} else {
+  $('preset').value = '0';
+  $('preset').onchange();
+}
+updateLineNumbers();
+buildTabs();
+</script>
+</body>
+</html>
