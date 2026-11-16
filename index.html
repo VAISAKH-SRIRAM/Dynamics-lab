@@ -3,7 +3,48 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0,user-scalable=yes,viewport-fit=cover">
-<title>Dynamics Lab — Nonlinear Dynamics & Chaos Engine</title>
+<title>Dynamics Lab — In-Browser Differential Equation & Chaos Simulator</title>
+<meta name="description" content="Zero-dependency, standalone browser laboratory for simulating ordinary differential equations (ODEs), chaotic attractors, phase portraits, and Lyapunov exponents in real time.">
+<meta name="keywords" content="differential equations, chaos theory, lorenz attractor, ode solver, ode45, runge kutta, lyapunov exponent, bifurcation diagram, phase portrait, dynamical systems, scientific computing, browser simulator">
+<meta name="author" content="Vaisakh Sriram">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://vaisakh-sriram.github.io/Dynamics-lab/">
+
+<!-- Open Graph / Social Sharing -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://vaisakh-sriram.github.io/Dynamics-lab/">
+<meta property="og:title" content="Dynamics Lab — Nonlinear Dynamics & Chaos Engine">
+<meta property="og:description" content="Simulate ODEs, 3D attractors, phase portraits, and Lyapunov exponents in real time. Single HTML file, zero dependencies.">
+<meta property="og:image" content="https://vaisakh-sriram.github.io/Dynamics-lab/logo.png">
+
+<!-- Twitter Cards -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:url" content="https://vaisakh-sriram.github.io/Dynamics-lab/">
+<meta name="twitter:title" content="Dynamics Lab — Nonlinear Dynamics & Chaos Engine">
+<meta name="twitter:description" content="Simulate ODEs, 3D attractors, phase portraits, and Lyapunov exponents in real time. Zero dependencies, pure vanilla JS.">
+<meta name="twitter:image" content="https://vaisakh-sriram.github.io/Dynamics-lab/logo.png">
+
+<!-- Structured Data for Search Engines -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Dynamics Lab",
+  "url": "https://vaisakh-sriram.github.io/Dynamics-lab/",
+  "description": "Zero-dependency browser simulator for nonlinear differential equations, chaotic attractors, phase portraits, and Lyapunov exponents.",
+  "applicationCategory": "EducationalApplication",
+  "operatingSystem": "All",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "author": {
+    "@type": "Person",
+    "name": "Vaisakh Sriram"
+  }
+}
+</script>
 <link rel="icon" type="image/png" href="data:image/png;base64,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">
 <style>
 :root {
@@ -1189,6 +1230,10 @@ canvas#cv {
       <button id="btn-help" title="Mathematical Reference and Syntax">
         Docs
       </button>
+
+      <a href="https://github.com/VAISAKH-SRIRAM/Dynamics-lab" target="_blank" rel="noopener" class="btn btn-star" title="Star Dynamics Lab on GitHub">
+        ★ Star
+      </a>
     </div>
   </header>
 
@@ -3630,6 +3675,7 @@ function exportMatlabCode() {
   const dt = $('dt').value, T = $('T').value;
   let code = `%% =========================================================================\n`;
   code += `%% Generated by Dynamics Lab (Nonlinear Dynamics & Chaos Engine)\n`;
+  code += `%% GitHub Repository: https://github.com/VAISAKH-SRIRAM/Dynamics-lab\n`;
   code += `%% Run directly in MATLAB or GNU Octave\n`;
   code += `%% =========================================================================\n\n`;
   code += `function run_simulation()\n`;
@@ -3668,6 +3714,7 @@ function exportPythonCode() {
   const T = $('T').value;
   let code = `# =========================================================================\n`;
   code += `# Generated by Dynamics Lab (Nonlinear Dynamics & Chaos Engine)\n`;
+  code += `# GitHub Repository: https://github.com/VAISAKH-SRIRAM/Dynamics-lab\n`;
   code += `# Requires: numpy, scipy, matplotlib\n`;
   code += `# =========================================================================\n\n`;
   code += `import numpy as np\n`;
