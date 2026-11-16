@@ -1218,6 +1218,7 @@ canvas#cv {
         <div class="dropdown-menu" id="export-menu">
           <div class="dropdown-item" id="export-matlab">MATLAB Script (.m)</div>
           <div class="dropdown-item" id="export-python">Python / SciPy (.py)</div>
+          <div class="dropdown-item" id="export-latex">Academic Paper Draft (.tex)</div>
           <div class="dropdown-item" id="export-csv">CSV Trajectory</div>
           <div class="dropdown-item" id="export-png">High-Res PNG</div>
         </div>
@@ -1279,6 +1280,7 @@ canvas#cv {
                   <option value="rk4" selected>RK4 (Classical Runge-Kutta 4th Order)</option>
                   <option value="rk45">RK45 Dormand-Prince Adaptive (MATLAB ode45)</option>
                   <option value="verlet">Symplectic Verlet (Energy Conserving)</option>
+                  <option value="implicit">Implicit Midpoint (Stiff & A-Stable)</option>
                 </select>
               </div>
             </div>
@@ -1340,6 +1342,7 @@ canvas#cv {
         <div class="hud-overlay hud-bottom-left" id="hud-stats">
           <span>Points: <b id="stat-pts">0</b></span>
           <span>Time: <b id="stat-t">0s</b></span>
+          <span id="stat-energy" style="display:none">Energy Drift: <b id="stat-energy-val">0%</b></span>
           <span id="stat-cursor"></span>
         </div>
 
@@ -1687,6 +1690,75 @@ function simulateDormandPrince(model, dtInit, T, y0) {
   };
 }
 
+
+/* Implicit Midpoint Integrator (A-Stable & Symplectic for Stiff Systems) */
+function simulateImplicitMidpoint(model, dt, T, y0) {
+  const steps = Math.max(1, Math.round(T / dt));
+  const stride = Math.max(1, Math.ceil(steps / MAX_RECORD_PTS));
+  const cnt = Math.floor(steps / stride) + 1;
+  const F = model.compiled, p = model.p, n = model.n;
+  const y = Float64Array.from(y0 || model.ics);
+  const ts = new Float64Array(cnt), ys = model.vars.map(() => new Float64Array(cnt));
+  let k = 0, diverged = false;
+
+  const rec = t => {
+    ts[k] = t;
+    for (let i = 0; i < n; i++) ys[i][k] = y[i];
+    k++;
+  };
+  rec(0);
+
+  const yHalf = new Float64Array(n);
+  const fHalf = new Float64Array(n);
+  const yNext = new Float64Array(n);
+  const residual = new Float64Array(n);
+  const J = [];
+  for (let i = 0; i < n; i++) J.push(new Float64Array(n));
+
+  for (let s = 1; s <= steps; s++) {
+    const t = (s - 1) * dt;
+    const tMid = t + 0.5 * dt;
+
+    F(t, y, p, fHalf);
+    for (let i = 0; i < n; i++) yNext[i] = y[i] + dt * fHalf[i];
+
+    for (let iter = 0; iter < 10; iter++) {
+      for (let i = 0; i < n; i++) yHalf[i] = 0.5 * (y[i] + yNext[i]);
+      F(tMid, yHalf, p, fHalf);
+
+      let maxRes = 0;
+      for (let i = 0; i < n; i++) {
+        residual[i] = yNext[i] - y[i] - dt * fHalf[i];
+        maxRes = Math.max(maxRes, Math.abs(residual[i]));
+      }
+      if (maxRes < 1e-9) break;
+
+      const eps = 1e-6;
+      const fPert = new Float64Array(n);
+      for (let j = 0; j < n; j++) {
+        const orig = yHalf[j];
+        yHalf[j] = orig + eps;
+        F(tMid, yHalf, p, fPert);
+        yHalf[j] = orig;
+        for (let i = 0; i < n; i++) {
+          const dF = (fPert[i] - fHalf[i]) / eps;
+          J[i][j] = (i === j ? 1 : 0) - 0.5 * dt * dF;
+        }
+      }
+
+      const sol = solveLinearSystem(J, residual, n);
+      if (!sol) break;
+      for (let i = 0; i < n; i++) yNext[i] -= sol[i];
+    }
+
+    for (let i = 0; i < n; i++) y[i] = yNext[i];
+    if (badVec(y)) { diverged = true; break; }
+    if (s % stride === 0 && k < cnt) rec(s * dt);
+  }
+
+  return { t: ts.subarray(0, k), y: ys.map(a => a.subarray(0, k)), diverged, dt, stride };
+}
+
 function simulateVerlet(model, dt, T, y0) {
   const steps = Math.max(1, Math.round(T / dt));
   const stride = Math.max(1, Math.ceil(steps / MAX_RECORD_PTS));
@@ -1725,6 +1797,7 @@ function simulateVerlet(model, dt, T, y0) {
 function simulate(model, dt, T, y0, method = 'rk4') {
   if (method === 'rk45') return simulateDormandPrince(model, dt, T, y0);
   if (method === 'verlet' && model.n % 2 === 0) return simulateVerlet(model, dt, T, y0);
+  if (method === 'implicit') return simulateImplicitMidpoint(model, dt, T, y0);
 
   const steps = Math.max(1, Math.round(T / dt));
   const stride = Math.max(1, Math.ceil(steps / MAX_RECORD_PTS));
@@ -2222,6 +2295,21 @@ y(0) = 1.5`
   },
   {
     category: 'Hamiltonian Dynamics',
+    name: 'Kepler Two-Body Gravitational Orbit',
+    dt: 0.012, T: 40, tab: 'phase',
+    text: `# Kepler 1609: Celestial two-body gravitational orbit
+# Demonstrates Symplectic conservation: Verlet stays exact, RK4 energy drifts
+x' = vx
+vx' = -x / ((x^2 + y^2)^(1.5))
+y' = vy
+vy' = -y / ((x^2 + y^2)^(1.5))
+x(0) = 1.0
+vx(0) = 0.0
+y(0) = 0.0
+vy(0) = 0.85`
+  },
+  {
+    category: 'Hamiltonian Dynamics',
     name: 'Hénon–Heiles (Galactic Stellar Chaos)',
     dt: 0.01, T: 160, tab: 'phase',
     text: `# Hénon-Heiles 1964: Non-linear stellar orbits
@@ -2233,6 +2321,61 @@ x(0) = 0
 px(0) = 0.35
 y(0) = 0.2
 py(0) = 0`
+  },
+  {
+    category: 'Electronic & Laser Chaos',
+    name: "Chua's Circuit (Double Scroll Chaos)",
+    dt: 0.01, T: 100, tab: '3d',
+    text: `# Chua 1983: Canonical non-linear electronic circuit
+x' = alpha*(y - x - (b*x + 0.5*(a - b)*(abs(x + 1) - abs(x - 1))))
+y' = x - y + z
+z' = -beta*y
+alpha = 15.6
+beta = 28.0
+a = -1.143
+b = -0.714
+x(0) = 0.7
+y(0) = 0
+z(0) = 0`
+  },
+  {
+    category: 'Stiff Differential Systems',
+    name: 'Robertson Chemical Reaction (Stiff Kinetics)',
+    dt: 0.001, T: 40, tab: 'series',
+    text: `# Robertson 1966: Canonical stiff chemical kinetics benchmark
+# Requires A-stable Implicit Midpoint solver (RK4 blows up)
+a' = -0.04*a + 1e4*b*c
+b' = 0.04*a - 1e4*b*c - 3e7*(b^2)
+c' = 3e7*(b^2)
+a(0) = 1.0
+b(0) = 0.0
+c(0) = 0.0`
+  },
+  {
+    category: 'Electronic & Laser Chaos',
+    name: 'Shimizu-Morioka Laser Attractor',
+    dt: 0.01, T: 120, tab: '3d',
+    text: `# Shimizu-Morioka 1980: Laser dynamics and Lorenz-family subharmonic bifurcation
+x' = y
+y' = (1 - z)*x - a*y
+z' = -b*z + (x^2)
+a = 0.75
+b = 0.45
+x(0) = 0.1
+y(0) = 0
+z(0) = 0`
+  },
+  {
+    category: 'Chaotic Attractors',
+    name: 'Sprott Minimal Chaos (Case B)',
+    dt: 0.02, T: 150, tab: '3d',
+    text: `# Sprott 1994: Minimal chaotic system with only 5 terms and 1 non-linearity
+x' = y*z
+y' = x - y
+z' = 1 - x*y
+x(0) = 0.1
+y(0) = 1.0
+z(0) = 0.0`
   },
   {
     category: 'Biological & Chemical Dynamics',
@@ -2328,6 +2471,12 @@ const STATE = {
   poincarePlane: 'z',
   poincareVal: 27,
   fftVar: 0,
+  returnVar: '',
+  returnCobweb: true,
+  flowStreamOn: false,
+  audioOn: false,
+  recurrenceEps: 0.10,
+  anaglyph3D: false,
   W: 100,
   H: 100,
   dpr: 1
@@ -2614,6 +2763,11 @@ function drawPhasePortrait() {
   }
   drawColorTrail(px, py, 1.8, maxIdx);
 
+  // Flow Streamlines (Dynamic Fluid Dye Particles)
+  if (STATE.flowStreamOn) {
+    updateAndDrawFlowParticles(f, xr, yr, STATE.ax.x, STATE.ax.y);
+  }
+
   // Equilibria overlay (Green for stable, Red for unstable)
   if (STATE.showEquilibriaOnPhase && STATE.equilibria.length) {
     const xi = STATE.model.vars.indexOf(STATE.ax.x), yi = STATE.model.vars.indexOf(STATE.ax.y);
@@ -2710,7 +2864,51 @@ function draw3DAttractor() {
     px[i] = pt[0]; py[i] = pt[1]; pz[i] = pt[2];
   }
 
-  drawColorTrail(px, py, 1.6, maxIdx, pz);
+  if (STATE.anaglyph3D) {
+    // Red-Cyan Stereoscopic 3D Projection
+    const leftProj = (x, y, z) => {
+      x /= sc; y /= sc; z /= sc;
+      const cyL = Math.cos(STATE.yaw - 0.022), syL = Math.sin(STATE.yaw - 0.022);
+      const x1 = x * cyL - z * syL, z1 = x * syL + z * cyL;
+      const y2 = y * cp - z1 * sp, z2 = y * sp + z1 * cp;
+      const k = 1 / (1 + z2 * 0.22);
+      return [cx + x1 * R * k, cyy - y2 * R * k];
+    };
+    const rightProj = (x, y, z) => {
+      x /= sc; y /= sc; z /= sc;
+      const cyR = Math.cos(STATE.yaw + 0.022), syR = Math.sin(STATE.yaw + 0.022);
+      const x1 = x * cyR - z * syR, z1 = x * syR + z * cyR;
+      const y2 = y * cp - z1 * sp, z2 = y * sp + z1 * cp;
+      const k = 1 / (1 + z2 * 0.22);
+      return [cx + x1 * R * k, cyy - y2 * R * k];
+    };
+
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+
+    // Left Eye (Red)
+    ctx.strokeStyle = 'rgba(255, 40, 70, 0.85)';
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    for (let i = 0; i < maxIdx; i++) {
+      const p = leftProj(A[0][i] - cen[0], A[1][i] - cen[1], A[2][i] - cen[2]);
+      i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]);
+    }
+    ctx.stroke();
+
+    // Right Eye (Cyan)
+    ctx.strokeStyle = 'rgba(0, 230, 255, 0.85)';
+    ctx.lineWidth = 1.8;
+    ctx.beginPath();
+    for (let i = 0; i < maxIdx; i++) {
+      const p = rightProj(A[0][i] - cen[0], A[1][i] - cen[1], A[2][i] - cen[2]);
+      i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]);
+    }
+    ctx.stroke();
+    ctx.restore();
+  } else {
+    drawColorTrail(px, py, 1.6, maxIdx, pz);
+  }
 
   // Initial Point
   ctx.fillStyle = '#ffffff';
@@ -2886,7 +3084,454 @@ function drawPoincare() {
   ctx.fillText('Crossings: ' + ptsX.length, STATE.W - 30, 36);
 }
 
+/* ==========================================================================
+   CHAOS AUDIO SONIFICATION ENGINE (Web Audio FM Synthesis)
+   ========================================================================== */
+let audioCtx = null;
+let carrierOsc = null;
+let modOsc = null;
+let modGain = null;
+let biquadFilter = null;
+let pannerNode = null;
+let masterGain = null;
+
+function initAudio() {
+  if (audioCtx) return;
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return;
+  audioCtx = new AudioContext();
+
+  carrierOsc = audioCtx.createOscillator();
+  carrierOsc.type = 'triangle';
+  carrierOsc.frequency.setValueAtTime(220, audioCtx.currentTime);
+
+  modOsc = audioCtx.createOscillator();
+  modOsc.type = 'sine';
+  modOsc.frequency.setValueAtTime(330, audioCtx.currentTime);
+
+  modGain = audioCtx.createGain();
+  modGain.gain.setValueAtTime(0, audioCtx.currentTime);
+
+  biquadFilter = audioCtx.createBiquadFilter();
+  biquadFilter.type = 'lowpass';
+  biquadFilter.frequency.setValueAtTime(1400, audioCtx.currentTime);
+  biquadFilter.Q.setValueAtTime(3.2, audioCtx.currentTime);
+
+  if (audioCtx.createStereoPanner) {
+    pannerNode = audioCtx.createStereoPanner();
+    pannerNode.pan.setValueAtTime(0, audioCtx.currentTime);
+  }
+
+  masterGain = audioCtx.createGain();
+  masterGain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+
+  modOsc.connect(modGain);
+  modGain.connect(carrierOsc.frequency);
+
+  if (pannerNode) {
+    carrierOsc.connect(biquadFilter);
+    biquadFilter.connect(pannerNode);
+    pannerNode.connect(masterGain);
+  } else {
+    carrierOsc.connect(biquadFilter);
+    biquadFilter.connect(masterGain);
+  }
+  masterGain.connect(audioCtx.destination);
+
+  carrierOsc.start();
+  modOsc.start();
+}
+
+function updateSonifyButton() {
+  const btn = $('btn-sonify');
+  if (!btn) return;
+  btn.innerHTML = `<span>${STATE.audioOn ? '🔊' : '🔇'}</span> <span>${STATE.audioOn ? 'Audio: On' : 'Sonify'}</span>`;
+  btn.style.color = STATE.audioOn ? '#ffffff' : 'var(--text-muted)';
+  btn.style.borderColor = STATE.audioOn ? '#ffffff' : 'var(--border-subtle)';
+}
+
+function toggleAudioSonification() {
+  initAudio();
+  if (!audioCtx) return;
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  STATE.audioOn = !STATE.audioOn;
+  const now = audioCtx.currentTime;
+  if (STATE.audioOn) {
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(masterGain.gain.value, now);
+    masterGain.gain.linearRampToValueAtTime(0.12, now + 0.08);
+  } else {
+    masterGain.gain.cancelScheduledValues(now);
+    masterGain.gain.setValueAtTime(masterGain.gain.value, now);
+    masterGain.gain.linearRampToValueAtTime(0.0001, now + 0.08);
+  }
+  updateSonifyButton();
+}
+
+function updateAudioSonification() {
+  if (!STATE.audioOn || !audioCtx || !STATE.sim || !STATE.sim.y || !STATE.sim.y.length) return;
+  const ptsCount = STATE.sim.t.length;
+  if (ptsCount < 2) return;
+  const now = audioCtx.currentTime;
+
+  let idx = 0;
+  if (STATE.animMode) {
+    idx = Math.min(ptsCount - 1, Math.max(0, Math.round(ptsCount * STATE.animProgress)));
+  } else {
+    const cycleTime = 14.0;
+    const phase = ((performance.now() / 1000) % cycleTime) / cycleTime;
+    idx = Math.floor(phase * ptsCount);
+  }
+
+  const m = STATE.model;
+  const y0 = STATE.sim.y[0][idx] || 0;
+  const y1 = (m.n > 1 ? STATE.sim.y[1][idx] : 0) || 0;
+  const y2 = (m.n > 2 ? STATE.sim.y[2][idx] : y0) || 0;
+
+  const ext0 = getExtent([STATE.sim.y[0]]);
+  const ext1 = m.n > 1 ? getExtent([STATE.sim.y[1]]) : ext0;
+  const ext2 = m.n > 2 ? getExtent([STATE.sim.y[2]]) : ext0;
+
+  const norm0 = Math.max(0, Math.min(1, (y0 - ext0[0]) / (ext0[1] - ext0[0] || 1)));
+  const norm1 = Math.max(0, Math.min(1, (y1 - ext1[0]) / (ext1[1] - ext1[0] || 1)));
+  const norm2 = Math.max(0, Math.min(1, (y2 - ext2[0]) / (ext2[1] - ext2[0] || 1)));
+
+  const baseFreq = 140 + Math.pow(norm0, 1.25) * 520;
+  const modFreq = baseFreq * (1.5 + norm2);
+  const fmIndex = Math.pow(norm1, 1.4) * 600;
+  const filterCutoff = 350 + Math.pow(norm2, 1.8) * 4200;
+  const pan = (norm0 - 0.5) * 1.6;
+
+  const tc = 0.04;
+  carrierOsc.frequency.setTargetAtTime(baseFreq, now, tc);
+  modOsc.frequency.setTargetAtTime(modFreq, now, tc);
+  modGain.gain.setTargetAtTime(fmIndex, now, tc);
+  biquadFilter.frequency.setTargetAtTime(filterCutoff, now, tc);
+  if (pannerNode) {
+    pannerNode.pan.setTargetAtTime(Math.max(-0.85, Math.min(0.85, pan)), now, tc);
+  }
+}
+
+/* ==========================================================================
+   FLOW STREAMLINES (Dynamic Tracer Dye Particles)
+   ========================================================================== */
+const FLOW_PARTICLE_COUNT = 90;
+let flowParticles = [];
+
+function initFlowParticles(xr, yr) {
+  flowParticles = [];
+  for (let i = 0; i < FLOW_PARTICLE_COUNT; i++) {
+    flowParticles.push({
+      x: xr[0] + Math.random() * (xr[1] - xr[0]),
+      y: yr[0] + Math.random() * (yr[1] - yr[0]),
+      trail: [],
+      age: Math.floor(Math.random() * 60),
+      maxAge: 70 + Math.floor(Math.random() * 80)
+    });
+  }
+}
+
+function updateAndDrawFlowParticles(f, xr, yr, xname, yname) {
+  const m = STATE.model;
+  if (!m || !m.compiled) return;
+  if (flowParticles.length !== FLOW_PARTICLE_COUNT) initFlowParticles(xr, yr);
+
+  const xi = m.vars.indexOf(xname), yi = m.vars.indexOf(yname);
+  const isTimeX = xname === 't', isTimeY = yname === 't';
+  const F = m.compiled;
+  const p = m.p;
+  const stateVec = Float64Array.from(m.ics);
+  const outDeriv = new Float64Array(m.n);
+  const dtSim = 0.035;
+
+  ctx.save();
+  for (let i = 0; i < flowParticles.length; i++) {
+    const pt = flowParticles[i];
+    pt.age++;
+
+    if (xi >= 0) stateVec[xi] = pt.x;
+    if (yi >= 0) stateVec[yi] = pt.y;
+    F(0, stateVec, p, outDeriv);
+
+    const vx = isTimeX ? 1 : (xi >= 0 ? outDeriv[xi] : 0);
+    const vy = isTimeY ? 1 : (yi >= 0 ? outDeriv[yi] : 0);
+    const vMag = Math.hypot(vx, vy);
+
+    pt.trail.push({ sx: f.X(pt.x), sy: f.Y(pt.y) });
+    if (pt.trail.length > 7) pt.trail.shift();
+
+    const stepScale = Math.min(1.2, 3.0 / (vMag + 1e-6));
+    pt.x += vx * dtSim * stepScale;
+    pt.y += vy * dtSim * stepScale;
+
+    if (pt.age >= pt.maxAge || pt.x < xr[0] || pt.x > xr[1] || pt.y < yr[0] || pt.y > yr[1] || !isFinite(pt.x) || !isFinite(pt.y)) {
+      pt.x = xr[0] + Math.random() * (xr[1] - xr[0]);
+      pt.y = yr[0] + Math.random() * (yr[1] - yr[0]);
+      pt.trail = [];
+      pt.age = 0;
+      pt.maxAge = 70 + Math.floor(Math.random() * 80);
+      continue;
+    }
+
+    if (pt.trail.length > 1) {
+      const alpha = Math.min(1.0, Math.sin((pt.age / pt.maxAge) * Math.PI));
+      ctx.beginPath();
+      ctx.moveTo(pt.trail[0].sx, pt.trail[0].sy);
+      for (let k = 1; k < pt.trail.length; k++) {
+        ctx.lineTo(pt.trail[k].sx, pt.trail[k].sy);
+      }
+      ctx.strokeStyle = `rgba(56, 189, 248, ${0.45 * alpha})`;
+      ctx.lineWidth = 1.4;
+      ctx.stroke();
+
+      const head = pt.trail[pt.trail.length - 1];
+      ctx.fillStyle = `rgba(255, 255, 255, ${0.85 * alpha})`;
+      ctx.beginPath();
+      ctx.arc(head.sx, head.sy, 1.8, 0, 2 * Math.PI);
+      ctx.fill();
+    }
+  }
+  ctx.restore();
+}
+
+/* ==========================================================================
+   POINCARÉ PEAK RETURN MAP (zn+1 vs zn)
+   ========================================================================== */
+function drawReturnMap() {
+  const m = STATE.model;
+  if (!m || !STATE.sim) return;
+  const vname = STATE.returnVar || (m.vars.includes('z') ? 'z' : m.vars[0]);
+  const vIdx = m.vars.indexOf(vname);
+  if (vIdx < 0) return;
+
+  const series = STATE.sim.y[vIdx];
+  const peaks = [];
+
+  for (let i = 1; i < series.length - 1; i++) {
+    const y0 = series[i - 1], y1 = series[i], y2 = series[i + 1];
+    if (y1 > y0 && y1 > y2) {
+      const denom = (y0 - 2 * y1 + y2);
+      let refinedPeak = y1;
+      if (Math.abs(denom) > 1e-12) {
+        const delta = 0.5 * (y0 - y2) / denom;
+        if (Math.abs(delta) < 1.0) {
+          refinedPeak = y1 - 0.25 * (y0 - y2) * delta;
+        }
+      }
+      peaks.push(refinedPeak);
+    }
+  }
+
+  if (peaks.length < 3) {
+    renderNotice(`Insufficient local maxima detected in ${vname}(t). Try increasing simulation time T or choosing another variable.`);
+    return;
+  }
+
+  const Px = [], Py = [];
+  for (let i = 0; i < peaks.length - 1; i++) {
+    Px.push(peaks[i]);
+    Py.push(peaks[i + 1]);
+  }
+
+  const minVal = Math.min(...peaks);
+  const maxVal = Math.max(...peaks);
+  const span = maxVal - minVal || 1;
+  const pad = span * 0.08;
+  const extent = [minVal - pad, maxVal + pad];
+
+  const f = drawFrame(extent, extent, `${vname}ₙ (Local Peak n)`, `${vname}ₙ₊₁ (Local Peak n+1)`);
+
+  // Identity diagonal line y = x (Fixed Points)
+  ctx.save();
+  ctx.strokeStyle = '#3f3f46';
+  ctx.lineWidth = 1.2;
+  ctx.setLineDash([5, 5]);
+  ctx.beginPath();
+  ctx.moveTo(f.X(extent[0]), f.Y(extent[0]));
+  ctx.lineTo(f.X(extent[1]), f.Y(extent[1]));
+  ctx.stroke();
+  ctx.restore();
+
+  // Cobweb iteration path
+  if (STATE.returnCobweb) {
+    ctx.save();
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.45)';
+    ctx.lineWidth = 1.1;
+    ctx.beginPath();
+    const maxCobweb = Math.min(150, Px.length);
+    ctx.moveTo(f.X(Px[0]), f.Y(Px[0]));
+    for (let i = 0; i < maxCobweb; i++) {
+      ctx.lineTo(f.X(Px[i]), f.Y(Py[i]));
+      ctx.lineTo(f.X(Py[i]), f.Y(Py[i]));
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  // Radiant Spectral Scatter Points
+  const totalPts = Px.length;
+  for (let i = 0; i < totalPts; i++) {
+    const frac = i / totalPts;
+    ctx.fillStyle = spectralRgb(frac);
+    ctx.beginPath();
+    ctx.arc(f.X(Px[i]), f.Y(Py[i]), 2.2, 0, 2 * Math.PI);
+    ctx.fill();
+  }
+  f.end();
+
+  ctx.font = '11px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+  ctx.fillStyle = '#71717a';
+  ctx.textAlign = 'right';
+  ctx.fillText(`Peaks: ${peaks.length}  |  Tent Map Pairs: ${Px.length}`, STATE.W - 30, 36);
+  ctx.fillText(`y = x identity line reveals unstable fixed points`, STATE.W - 30, 52);
+}
+
+/* ==========================================================================
+   HAMILTONIAN ENERGY EVALUATOR
+   ========================================================================== */
+function computeEnergy(model, yVec) {
+  if (!model || !yVec || yVec.length < 2) return NaN;
+  const name = (model.name || '').toLowerCase();
+  const v = model.vars;
+  const x = yVec[0], y = yVec.length > 1 ? yVec[1] : 0;
+
+  if (name.includes('kepler') || (v.includes('vx') && v.includes('vy'))) {
+    const xi = v.indexOf('x'), yi = v.indexOf('y');
+    const vxi = v.indexOf('vx'), vyi = v.indexOf('vy');
+    const rx = yVec[xi], ry = yVec[yi], vx = yVec[vxi], vy = yVec[vyi];
+    const r = Math.hypot(rx, ry);
+    return 0.5 * (vx * vx + vy * vy) - 1.0 / (r + 1e-12);
+  }
+  if (name.includes('hénon') || name.includes('henon')) {
+    const xi = v.indexOf('x'), pxi = v.indexOf('px');
+    const yi = v.indexOf('y'), pyi = v.indexOf('py');
+    const qx = yVec[xi], px = yVec[pxi], qy = yVec[yi], py = yVec[pyi];
+    return 0.5 * (px * px + py * py) + 0.5 * (qx * qx + qy * qy) + (qx * qx * qy) - (qy * qy * qy) / 3;
+  }
+  if (name.includes('lotka') && yVec[0] > 0 && yVec[1] > 0) {
+    const p = model.p;
+    const a = p[0] || 0.75, b = p[1] || 0.3, c = p[2] || 0.5, d = p[3] || 0.4;
+    return d * x - c * Math.log(x) + b * y - a * Math.log(y);
+  }
+  if (model.n % 2 === 0 && (v.some(s => s.startsWith('p') || s.startsWith('v')))) {
+    const half = model.n / 2;
+    let T = 0, V = 0;
+    for (let i = 0; i < half; i++) {
+      V += 0.5 * yVec[i] * yVec[i];
+      T += 0.5 * yVec[half + i] * yVec[half + i];
+    }
+    return T + V;
+  }
+  return NaN;
+}
+
 /* Power Spectrum (FFT) */
+
+/* ==========================================================================
+   RECURRENCE PLOT & QUANTIFICATION ANALYSIS (RQA)
+   ========================================================================== */
+function drawRecurrencePlot() {
+  const m = STATE.model;
+  if (!m || !STATE.sim || STATE.sim.t.length < 10) {
+    renderNotice('Simulating longer duration T needed for Recurrence Plot.');
+    return;
+  }
+
+  const total = STATE.sim.t.length;
+  const N = Math.min(300, total);
+  const step = Math.max(1, Math.floor(total / N));
+  const pts = [];
+
+  for (let i = 0; i < total && pts.length < N; i += step) {
+    const vec = [];
+    for (let d = 0; d < m.n; d++) vec.push(STATE.sim.y[d][i]);
+    pts.push(vec);
+  }
+  const M = pts.length;
+
+  let maxDist = 0;
+  for (let i = 0; i < M; i += Math.max(1, Math.floor(M / 20))) {
+    for (let j = i + 1; j < M; j += Math.max(1, Math.floor(M / 20))) {
+      let d2 = 0;
+      for (let k = 0; k < m.n; k++) {
+        const diff = pts[i][k] - pts[j][k];
+        d2 += diff * diff;
+      }
+      if (d2 > maxDist) maxDist = d2;
+    }
+  }
+  const diameter = Math.sqrt(maxDist) || 1.0;
+
+  const epsFrac = STATE.recurrenceEps !== undefined ? STATE.recurrenceEps : 0.10;
+  const eps = epsFrac * diameter;
+  const eps2 = eps * eps;
+
+  const margin = 50;
+  const size = Math.min(STATE.W - margin * 2, STATE.H - margin * 2);
+  const ox = (STATE.W - size) / 2;
+  const oy = (STATE.H - size) / 2;
+
+  ctx.fillStyle = '#09090b';
+  ctx.fillRect(ox, oy, size, size);
+  ctx.strokeStyle = '#27272a';
+  ctx.lineWidth = 1.2;
+  ctx.strokeRect(ox, oy, size, size);
+
+  const imgData = ctx.createImageData(M, M);
+  const data = imgData.data;
+  let recurrencePoints = 0;
+
+  for (let i = 0; i < M; i++) {
+    for (let j = 0; j < M; j++) {
+      let d2 = 0;
+      for (let k = 0; k < m.n; k++) {
+        const diff = pts[i][k] - pts[j][k];
+        d2 += diff * diff;
+      }
+      const idx = (j * M + i) * 4;
+      if (d2 <= eps2) {
+        recurrencePoints++;
+        data[idx] = 56;
+        data[idx + 1] = 189;
+        data[idx + 2] = 248;
+        data[idx + 3] = 255;
+      } else {
+        data[idx] = 9;
+        data[idx + 1] = 9;
+        data[idx + 2] = 11;
+        data[idx + 3] = 255;
+      }
+    }
+  }
+
+  const offCanvas = document.createElement('canvas');
+  offCanvas.width = M;
+  offCanvas.height = M;
+  offCanvas.getContext('2d').putImageData(imgData, 0, 0);
+
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(offCanvas, ox, oy, size, size);
+
+  ctx.font = '11px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+  ctx.fillStyle = '#71717a';
+  ctx.textAlign = 'center';
+  ctx.fillText('Time t (Phase Space Orbit)', ox + size / 2, oy + size + 22);
+  ctx.save();
+  ctx.translate(ox - 24, oy + size / 2);
+  ctx.rotate(-Math.PI / 2);
+  ctx.fillText('Time t (Phase Space Orbit)', 0, 0);
+  ctx.restore();
+
+  const RR = (recurrencePoints / (M * M)) * 100;
+  ctx.fillStyle = '#ffffff';
+  ctx.textAlign = 'right';
+  ctx.fillText(`Recurrence Rate (RR): ${RR.toFixed(2)}%  |  ε = ${(epsFrac * 100).toFixed(1)}% of diameter`, STATE.W - 30, 36);
+  ctx.fillStyle = '#71717a';
+  ctx.fillText(`Diagonal lines signify deterministic periodic/chaotic structures`, STATE.W - 30, 52);
+}
+
 function drawFFT() {
   const m = STATE.model;
   if (!m || !STATE.sim) return;
@@ -2961,11 +3606,30 @@ function draw() {
   else if (STATE.tab === 'div') drawSensitivity();
   else if (STATE.tab === 'bif') drawBifurcation();
   else if (STATE.tab === 'poincare') drawPoincare();
+  else if (STATE.tab === 'return') drawReturnMap();
+  else if (STATE.tab === 'recurrence') drawRecurrencePlot();
   else if (STATE.tab === 'fft') drawFFT();
 
   if (STATE.sim) {
     $('stat-pts').textContent = STATE.sim.t.length.toLocaleString();
     $('stat-t').textContent = STATE.sim.t[STATE.sim.t.length - 1].toFixed(1) + 's';
+
+    const eBox = $('stat-energy');
+    if (eBox && STATE.sim.y.length && STATE.sim.t.length > 2) {
+      const y0 = STATE.sim.y.map(arr => arr[0]);
+      const yEnd = STATE.sim.y.map(arr => arr[arr.length - 1]);
+      const E0 = computeEnergy(STATE.model, y0);
+      const EEnd = computeEnergy(STATE.model, yEnd);
+      if (isFinite(E0) && isFinite(EEnd) && Math.abs(E0) > 1e-9) {
+        const drift = Math.abs((EEnd - E0) / E0) * 100;
+        eBox.style.display = 'inline';
+        const isPrecise = drift < 0.05;
+        const valStr = drift < 0.001 ? drift.toExponential(2) : drift.toFixed(3);
+        $('stat-energy-val').innerHTML = `<span style="color:${isPrecise ? '#10b981' : '#f43f5e'}">${valStr}%</span> (${STATE.solver.toUpperCase()})`;
+      } else {
+        eBox.style.display = 'none';
+      }
+    }
   }
 }
 
@@ -2984,6 +3648,12 @@ function animationLoop(timestamp) {
     if (STATE.animProgress > 1.0) STATE.animProgress = 0.0;
     $('playback-progress').value = STATE.animProgress;
     needsRedraw = true;
+  }
+  if (STATE.tab === 'phase' && STATE.flowStreamOn && STATE.sim) {
+    needsRedraw = true;
+  }
+  if (STATE.audioOn) {
+    updateAudioSonification();
   }
 
   if (needsRedraw) draw();
@@ -3163,6 +3833,8 @@ const TABS_CONFIG = [
   { id: 'div', label: 'SENSITIVITY' },
   { id: 'bif', label: 'BIFURCATION' },
   { id: 'poincare', label: 'POINCARÉ' },
+  { id: 'return', label: 'RETURN MAP' },
+  { id: 'recurrence', label: 'RECURRENCE' },
   { id: 'fft', label: 'FFT SPECTRUM' }
 ];
 
@@ -3204,6 +3876,18 @@ function buildOptionsBar() {
   const m = STATE.model;
   if (!m) return;
 
+  const audioBtn = document.createElement('button');
+  audioBtn.id = 'btn-sonify';
+  audioBtn.className = 'btn';
+  audioBtn.style.display = 'flex';
+  audioBtn.style.alignItems = 'center';
+  audioBtn.style.gap = '5px';
+  audioBtn.style.padding = '3px 8px';
+  audioBtn.style.fontSize = '11px';
+  audioBtn.innerHTML = `<span>${STATE.audioOn ? '🔊' : '🔇'}</span> <span>${STATE.audioOn ? 'Audio: On' : 'Sonify'}</span>`;
+  audioBtn.onclick = toggleAudioSonification;
+  right.appendChild(audioBtn);
+
   const names = m.n >= 3 ? m.vars : [...m.vars, 't'];
   const allVars = [...m.vars, 't'];
 
@@ -3240,6 +3924,18 @@ function buildOptionsBar() {
     eqLabel.querySelector('input').onchange = e => { STATE.showEquilibriaOnPhase = e.target.checked; draw(); };
     left.appendChild(eqLabel);
 
+    const flowLabel = document.createElement('label');
+    flowLabel.className = 'opt-item toggle-pill';
+    flowLabel.innerHTML = `<input type="checkbox" ${STATE.flowStreamOn ? 'checked' : ''}> Flow Stream`;
+    flowLabel.querySelector('input').onchange = e => {
+      STATE.flowStreamOn = e.target.checked;
+      if (STATE.flowStreamOn && STATE.lastFrame) {
+        initFlowParticles(STATE.lastFrame.xr, STATE.lastFrame.yr);
+      }
+      draw();
+    };
+    left.appendChild(flowLabel);
+
     const swarmBtn = document.createElement('button');
     swarmBtn.textContent = 'Spawn Swarm';
     swarmBtn.onclick = spawnSwarm;
@@ -3252,6 +3948,14 @@ function buildOptionsBar() {
       right.appendChild(clearBtn);
     }
   } else if (STATE.tab === '3d') {
+    const anaglyphLabel = document.createElement('label');
+    anaglyphLabel.className = 'opt-item toggle-pill';
+    anaglyphLabel.innerHTML = `<input type="checkbox" ${STATE.anaglyph3D ? 'checked' : ''}> 3D Anaglyph (Red-Cyan)`;
+    anaglyphLabel.querySelector('input').onchange = e => {
+      STATE.anaglyph3D = e.target.checked;
+      draw();
+    };
+    left.appendChild(anaglyphLabel);
     ['x', 'y', 'z'].forEach(axis => {
       const grp = document.createElement('div');
       grp.className = 'opt-item';
@@ -3275,6 +3979,25 @@ function buildOptionsBar() {
       draw();
     };
     left.appendChild(animLabel);
+  } else if (STATE.tab === 'return') {
+    const varGrp = document.createElement('div');
+    varGrp.className = 'opt-item';
+    varGrp.innerHTML = '<span>Peak of:</span>';
+    const defVar = STATE.returnVar || (m.vars.includes('z') ? 'z' : m.vars[0]);
+    varGrp.appendChild(createSelect(m.vars, defVar, v => {
+      STATE.returnVar = v;
+      draw();
+    }));
+    left.appendChild(varGrp);
+
+    const cobwebLabel = document.createElement('label');
+    cobwebLabel.className = 'opt-item toggle-pill';
+    cobwebLabel.innerHTML = `<input type="checkbox" ${STATE.returnCobweb ? 'checked' : ''}> Cobweb Steps`;
+    cobwebLabel.querySelector('input').onchange = e => {
+      STATE.returnCobweb = e.target.checked;
+      draw();
+    };
+    left.appendChild(cobwebLabel);
   } else if (STATE.tab === 'poincare') {
     const plLabel = document.createElement('div');
     plLabel.className = 'opt-item';
@@ -3287,6 +4010,19 @@ function buildOptionsBar() {
     valLabel.innerHTML = `<span>At Value:</span><input type="number" step="any" value="${STATE.poincareVal || 27}" style="width:68px;background:var(--bg-elevated);color:#fff;border:1px solid var(--border-subtle);border-radius:4px;padding:2px 6px">`;
     valLabel.querySelector('input').onchange = e => { STATE.poincareVal = +e.target.value; draw(); };
     left.appendChild(valLabel);
+  } else if (STATE.tab === 'recurrence') {
+    const epsGrp = document.createElement('div');
+    epsGrp.className = 'opt-item';
+    epsGrp.innerHTML = `<span>Threshold ε:</span>
+      <input type="range" min="0.02" max="0.35" step="0.01" value="${STATE.recurrenceEps || 0.10}" style="width:80px;accent-color:#fff">
+      <span id="eps-val" style="width:36px;font-family:var(--font-mono)">${Math.round((STATE.recurrenceEps || 0.10) * 100)}%</span>`;
+    const slider = epsGrp.querySelector('input');
+    slider.oninput = e => {
+      STATE.recurrenceEps = +e.target.value;
+      epsGrp.querySelector('#eps-val').textContent = Math.round(STATE.recurrenceEps * 100) + '%';
+      draw();
+    };
+    left.appendChild(epsGrp);
   } else if (STATE.tab === 'fft') {
     const fftVarSelect = document.createElement('div');
     fftVarSelect.className = 'opt-item';
@@ -3458,6 +4194,40 @@ function buildParameterSliders() {
   });
 }
 
+
+function computeChaosInvariantsHtml(L) {
+  const m = STATE.model;
+  if (!m || !STATE.sim || !STATE.sim.y.length || m.n !== 3 || !isFinite(L)) return '';
+
+  // Approximate time-averaged divergence Tr(J) along trajectory
+  const ptsCount = STATE.sim.t.length;
+  const K = Math.min(25, ptsCount);
+  const step = Math.max(1, Math.floor(ptsCount / K));
+  let divSum = 0;
+  const p = m.p;
+  const ptVec = new Float64Array(3);
+
+  for (let s = 0; s < ptsCount && s / step < K; s += step) {
+    ptVec[0] = STATE.sim.y[0][s];
+    ptVec[1] = STATE.sim.y[1][s];
+    ptVec[2] = STATE.sim.y[2][s];
+    const J = computeJacobian(m.compiled, ptVec, p, 3);
+    divSum += (J[0][0] + J[1][1] + J[2][2]);
+  }
+  const divF = divSum / Math.max(1, K);
+
+  let extraHtml = `<div style="margin-top:8px;padding-top:6px;border-top:1px solid var(--border-subtle);font-family:var(--font-mono);font-size:11px;color:var(--text-muted)">
+    <div style="display:flex;justify-content:space-between"><span>Phase Div ∇·f:</span><b style="color:#ffffff">${divF.toFixed(3)}</b></div>`;
+
+  if (L > 0.03 && divF < 0) {
+    const lam3 = divF - L;
+    const D_KY = 2 + (L / Math.abs(lam3));
+    extraHtml += `<div style="display:flex;justify-content:space-between;margin-top:2px"><span>Kaplan-Yorke (D_KY):</span><b style="color:#38bdf8">${D_KY.toFixed(3)}</b></div>`;
+  }
+  extraHtml += `</div>`;
+  return extraHtml;
+}
+
 function updateDiagnosticsHUD() {
   const L = STATE.lyap, box = $('diagnostics-content'), tag = $('chaos-tag');
   let badgeClass = 'stable', badgeText = 'STABLE FIXED POINT', expl = '', fillWidth = '10%';
@@ -3516,6 +4286,7 @@ function updateDiagnosticsHUD() {
       <div class="diag-bar-fill" style="width:${fillWidth};background:${fillColor}"></div>
     </div>
     <div class="diag-expl">${expl}</div>
+    ${computeChaosInvariantsHtml(L)}
     <div class="diag-meta">Estimated via Benettin algorithm over T = ${formatNum(STATE.lyapT)}, Solver: ${STATE.solver.toUpperCase()}</div>
   `;
 }
@@ -3708,6 +4479,118 @@ function exportMatlabCode() {
   showToast('MATLAB (.m) code exported.');
 }
 
+
+/* Academic LaTeX Paper Exporter */
+function exportLatexReport() {
+  const m = STATE.model;
+  if (!m) return;
+  const L = STATE.lyap;
+  const isChaos = L > 0.03;
+
+  let tex = `\\documentclass[11pt,a4paper]{article}
+\\usepackage{amsmath,amssymb,amsfonts}
+\\usepackage{graphicx}
+\\usepackage{booktabs}
+\\usepackage{hyperref}
+\\usepackage{geometry}
+\\geometry{margin=1in}
+
+\\title{\\textbf{Nonlinear Dynamical Analysis and Chaos Simulation of the ${m.name || 'System'}}}
+\\author{\\textbf{Vaisakh Sriram}\\\\
+\\textit{Dynamics Lab --- Open-Source Nonlinear Dynamics Engine}\\\\
+\\href{https://github.com/VAISAKH-SRIRAM/Dynamics-lab}{https://github.com/VAISAKH-SRIRAM/Dynamics-lab}}
+\\date{\\today}
+
+\\begin{document}
+\\maketitle
+
+\\begin{abstract}
+This report provides a numerical and analytical investigation of the ${m.name || 'dynamical system'}. We evaluate the state-space equations of motion, locate all equilibria via multi-start Newton-Raphson root finding, determine linear stability through analytical eigenvalue spectrum analysis, and quantify deterministic chaos using the maximal Lyapunov exponent and phase-space divergence.
+\\end{abstract}
+
+\\section{Mathematical Formulation}
+The autonomous system is described by the $n=${m.n}$-dimensional coupled ordinary differential equation:
+\\begin{equation}
+\\frac{d\\mathbf{y}}{dt} = \\mathbf{f}(\\mathbf{y}; \\mathbf{p}), \\quad \\mathbf{y}(0) = \\mathbf{y}_0
+\\end{equation}
+where the state vector is $\\mathbf{y} = [${m.vars.join(', ')}]^T$. The explicit equations of motion are given by:
+\\begin{align}
+`;
+
+  m.vars.forEach((v, i) => {
+    tex += `\\frac{d ${v}}{dt} &= ${m.eqLines[i] || 'f_' + i} ${i < m.vars.length - 1 ? '\\\\' : ''}\n`;
+  });
+
+  tex += `\\end{align}
+
+\\subsection{System Parameters and Initial Conditions}
+The simulation parameters are configured as:
+\\begin{itemize}
+`;
+  m.pnames.forEach((pn, i) => {
+    tex += `  \\item Parameter $${pn} = ${m.p[i]}$\n`;
+  });
+  m.vars.forEach((vn, i) => {
+    tex += `  \\item Initial Condition $${vn}(0) = ${m.ics[i]}$\n`;
+  });
+  tex += `  \\item Integration Step Size: $\\Delta t = ${$('dt').value}$, Duration: $T = ${$('T').value}$
+  \\item Numerical Scheme: ${STATE.solver.toUpperCase()}
+\\end{itemize}
+
+\\section{Equilibrium Points and Stability}
+`;
+
+  if (STATE.equilibria && STATE.equilibria.length) {
+    tex += `The multi-start Newton-Raphson solver located ${STATE.equilibria.length} equilibrium point(s) in phase space:
+\\begin{table}[h!]
+\\centering
+\\begin{tabular}{lll}
+\\toprule
+\\textbf{Fixed Point Coordinates} & \\textbf{Eigenvalues} & \\textbf{Classification} \\\\
+\\midrule
+`;
+    STATE.equilibria.forEach(eq => {
+      const coordStr = '(' + eq.coords.map(c => c.toFixed(3)).join(', ') + ')';
+      const eigStr = eq.eigenvalues.map(ev => {
+        if (typeof ev === 'string') return ev;
+        if (ev.im !== 0) return `${ev.re.toFixed(2)} \\pm ${Math.abs(ev.im).toFixed(2)}i`;
+        return ev.re.toFixed(2);
+      }).join(', ');
+      tex += `${coordStr} & $${eigStr}$ & \\textbf{${eq.stability}} \\\\\n`;
+    });
+    tex += `\\bottomrule
+\\end{tabular}
+\\caption{Equilibria and linear stability classification.}
+\\end{table}
+`;
+  } else {
+    tex += `No isolated equilibria were detected in the sampled domain.\n`;
+  }
+
+  tex += `
+\\section{Chaos Diagnostics and Lyapunov Exponent}
+The maximal Lyapunov exponent was computed via continuous Benettin reorthonormalization with initial displacement $d_0 = 10^{-8}$:
+\\begin{equation}
+\\lambda_{\\max} = \\lim_{t \\to \\infty} \\frac{1}{t} \\ln \\frac{d(t)}{d_0} \\approx ${isFinite(L) ? (L >= 0 ? '+' : '') + L.toFixed(4) : '\\text{N/A}'}
+\\end{equation}
+\\textbf{Dynamic Regime Classification:} \\textit{${isChaos ? 'Deterministic Chaos (Exponential sensitivity to initial conditions)' : 'Regular / Periodic Flow'}}.
+
+\\section{Software Availability}
+Simulations were executed using \\textbf{Dynamics Lab}, a zero-dependency in-browser scientific computing environment. Standalone executable code and full simulation permalinks are accessible at \\url{https://vaisakh-sriram.github.io/Dynamics-lab/}.
+
+\\begin{thebibliography}{99}
+\\bibitem{lorenz1963} E. N. Lorenz, ``Deterministic nonperiodic flow,'' \\textit{J. Atmos. Sci.}, vol. 20, no. 2, pp. 130--141, 1963.
+\\bibitem{benettin1980} G. Benettin et al., ``Lyapunov characteristic exponents for smooth dynamical systems,'' \\textit{Meccanica}, vol. 15, no. 1, pp. 9--20, 1980.
+\\bibitem{strogatz2014} S. H. Strogatz, \\textit{Nonlinear Dynamics and Chaos}, Westview Press, 2014.
+\\end{thebibliography}
+
+\\end{document}
+`;
+
+  triggerDownload('dynamics_lab_paper.tex', tex, 'application/x-tex');
+  showToast('Academic LaTeX Paper (.tex) exported.');
+}
+
 function exportPythonCode() {
   const m = STATE.model;
   if (!m) return;
@@ -3750,6 +4633,8 @@ window.addEventListener('click', () => $('export-menu').classList.remove('show')
 
 $('export-matlab').onclick = exportMatlabCode;
 $('export-python').onclick = exportPythonCode;
+  const lBtn = $('export-latex');
+  if (lBtn) lBtn.onclick = exportLatexReport;
 $('export-csv').onclick = () => {
   if (!STATE.sim) return;
   let csv = 't,' + STATE.model.vars.join(',') + '\n';
