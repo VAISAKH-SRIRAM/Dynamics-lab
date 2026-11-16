@@ -7,6 +7,11 @@
 
 ---
 
+<div align="center">
+  <img src="benchmark_summary.png" alt="Official Benchmark Summary Dashboard: Dynamics Lab vs MATLAB" width="100%">
+  <p><em>Real-Time Hardware Benchmark: 12th Gen Intel Core i3-12100 (x64) | Node.js v24.13.0 (V8) vs. MATLAB R2024b.</em></p>
+</div>
+
 ## Executive Summary
 
 | Diagnostic Metric | Dynamics Lab (Vaisakh Sriram) | MATLAB R2024b (MathWorks) | Performance Delta |
@@ -46,6 +51,13 @@
   * **Throughput:** **16.23 MLUPS** (Mega Lattice Site Updates Per Second).
   * **Frame Rate:** **1288 FPS** (comfortably exceeding the 60 FPS V-Sync refresh budget).
 * **Physics Captured:** von Kármán vortex shedding, boundary layer separation, and aerodynamic wake behind circular cylinders and NACA cambered airfoils in real time.
+
+<div align="center">
+  <br>
+  <img src="fluid_vortex_proof.png" alt="113,400 Continuum Variable Navier-Stokes Wind Tunnel: von Kármán Vortex Street" width="100%">
+  <p><em>Live Continuum Capture: 113,400-variable D2Q9 Lattice Boltzmann simulation of von Kármán vortex shedding around a cylinder obstacle at 60 FPS in Dynamics Lab.</em></p>
+  <br>
+</div>
 
 ---
 
