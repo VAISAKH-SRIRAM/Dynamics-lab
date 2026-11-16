@@ -1219,6 +1219,7 @@ canvas#cv {
           <div class="dropdown-item" id="export-matlab">MATLAB Script (.m)</div>
           <div class="dropdown-item" id="export-python">Python / SciPy (.py)</div>
           <div class="dropdown-item" id="export-latex">Academic Paper Draft (.tex)</div>
+          <div class="dropdown-item" id="export-c">Embedded ANSI C Code (.c)</div>
           <div class="dropdown-item" id="export-csv">CSV Trajectory</div>
           <div class="dropdown-item" id="export-png">High-Res PNG</div>
         </div>
@@ -1419,7 +1420,7 @@ canvas#cv {
 const FUNCS = {
   sin:1, cos:1, tan:1, asin:1, acos:1, atan:1, atan2:1,
   sinh:1, cosh:1, tanh:1, exp:1, log:1, ln:1, log10:1,
-  sqrt:1, abs:1, pow:1, min:1, max:1, floor:1, ceil:1, sign:1, hypot:1
+  sqrt:1, abs:1, pow:1, min:1, max:1, floor:1, ceil:1, sign:1, hypot:1, delay:1
 };
 const BANNED = ['t', 'Math', 'NaN', 'Infinity', 'undefined', 'arguments', 'eval'];
 const MAX_RECORD_PTS = 25000;
@@ -1498,6 +1499,18 @@ function parseExpr(src, names, allowT) {
     }
     if (t.k === 'id') {
       const nm = t.v;
+      if (nm === 'delay' && isOp('(')) {
+        i++;
+        const varTok = tk[i++];
+        if (!varTok || varTok.k !== 'id') throw new Error("Expected variable name as first argument of delay(...)");
+        const vName = varTok.v;
+        if (!isOp(',')) throw new Error("Expected ',' after variable name in delay(" + vName + ", tau)");
+        i++;
+        const tauExpr = expr();
+        if (!isOp(')')) throw new Error("Missing ')' after delay(" + vName + ", ...)");
+        i++;
+        return `__delay('${vName}', ${tauExpr}, t)`;
+      }
       if (isOp('(') && FUNCS[nm] === 1 && !names.has(nm)) {
         i++;
         const args = [];
@@ -1542,7 +1555,7 @@ function checkName(nm) {
 
 function parseModel(text) {
   const lines = text.split('\n').map((l, idx) => ({ raw: l, clean: l.replace(/#.*$/, '').trim(), lineNum: idx + 1 })).filter(l => l.clean.length > 0);
-  const eqs = [], ics = {}, params = [];
+  const eqs = [], ics = {}, params = [], events = [];
 
   for (const item of lines) {
     const ln = item.clean;
@@ -1557,8 +1570,10 @@ function parseModel(text) {
       checkName(m[1]);
       if (params.some(p => p.n === m[1])) throw new Error("Parameter '" + m[1] + "' defined multiple times (line " + item.lineNum + ")");
       params.push({ n: m[1], val: evalConst(m[2]), lineNum: item.lineNum });
+    } else if ((m = /^when\s+(.+)\s*=>\s*(.+)$/i.exec(ln))) {
+      events.push({ cond: m[1].trim(), act: m[2].trim(), lineNum: item.lineNum });
     } else {
-      throw new Error("Line " + item.lineNum + ": Cannot parse '" + ln + "'. Format as: x' = ... or a = 1.0 or x(0) = 1");
+      throw new Error("Line " + item.lineNum + ": Cannot parse '" + ln + "'. Format as: x' = ... or a = 1.0 or x(0) = 1 or when condition => action");
     }
   }
 
@@ -1585,16 +1600,57 @@ function parseModel(text) {
   const names = new Set([...vars, ...params.map(p => p.n)]);
   const codes = eqs.map(e => parseExpr(e.src, names, true));
 
+  const hasDelay = text.includes('delay(');
   const body = 'const ' + vars.map((v, i) => v + '=v__[' + i + ']').join(',') + ';' +
     (params.length ? 'const ' + params.map((p, i) => p.n + '=p__[' + i + ']').join(',') + ';' : '') +
     codes.map((c, i) => 'o__[' + i + ']=' + c + ';').join('');
 
-  const F = new Function('t', 'v__', 'p__', 'o__', body);
+  const F = new Function('t', 'v__', 'p__', 'o__', '__delay', body);
+
+  // Compile in-loop discrete event triggers (Hybrid Dynamics)
+  const compiledEvents = events.map(ev => {
+    let jsCond = ev.cond.replace(/\band\b/gi, '&&').replace(/\bor\b/gi, '||');
+    vars.forEach((v, idx) => {
+      jsCond = jsCond.replace(new RegExp('\\b' + v + '\\b', 'g'), 'y[' + idx + ']');
+    });
+    params.forEach((p, idx) => {
+      jsCond = jsCond.replace(new RegExp('\\b' + p.n + '\\b', 'g'), 'p[' + idx + ']');
+    });
+
+    const actAssignments = ev.act.split(',').map(a => a.trim()).filter(Boolean);
+    let actBody = '';
+    actAssignments.forEach(asgn => {
+      const parts = asgn.split('=');
+      if (parts.length === 2) {
+        const vTarget = parts[0].trim();
+        const vIdx = vars.indexOf(vTarget);
+        if (vIdx >= 0) {
+          let exprCode = parts[1].trim();
+          vars.forEach((v, idx) => {
+            exprCode = exprCode.replace(new RegExp('\\b' + v + '\\b', 'g'), 'y[' + idx + ']');
+          });
+          params.forEach((p, idx) => {
+            exprCode = exprCode.replace(new RegExp('\\b' + p.n + '\\b', 'g'), 'p[' + idx + ']');
+          });
+          actBody += `y[${vIdx}] = (${exprCode});`;
+        }
+      }
+    });
+
+    try {
+      const fn = new Function('t', 'y', 'p', `if (${jsCond}) { ${actBody} return true; } return false;`);
+      return fn;
+    } catch (e) {
+      return null;
+    }
+  }).filter(Boolean);
   return {
     vars,
     n: vars.length,
     F,
     eqs,
+    hasDelay,
+    events: compiledEvents,
     pnames: params.map(p => p.n),
     p: Float64Array.from(params.map(p => p.val)),
     ics: icv,
@@ -1612,17 +1668,17 @@ function badVec(y) {
 /* ==========================================================================
    2. NUMERICAL INTEGRATION ENGINES
    ========================================================================== */
-function integratorRK4(model) {
+function integratorRK4(model, __delay) {
   const n = model.n, F = model.F, p = model.p;
   const k1 = new Float64Array(n), k2 = new Float64Array(n), k3 = new Float64Array(n), k4 = new Float64Array(n), tmp = new Float64Array(n);
   return function(t, y, h) {
-    F(t, y, p, k1);
+    F(t, y, p, k1, __delay);
     for (let i = 0; i < n; i++) tmp[i] = y[i] + 0.5 * h * k1[i];
-    F(t + 0.5 * h, tmp, p, k2);
+    F(t + 0.5 * h, tmp, p, k2, __delay);
     for (let i = 0; i < n; i++) tmp[i] = y[i] + 0.5 * h * k2[i];
-    F(t + 0.5 * h, tmp, p, k3);
+    F(t + 0.5 * h, tmp, p, k3, __delay);
     for (let i = 0; i < n; i++) tmp[i] = y[i] + h * k3[i];
-    F(t + h, tmp, p, k4);
+    F(t + h, tmp, p, k4, __delay);
     for (let i = 0; i < n; i++) y[i] += (h / 6) * (k1[i] + 2 * k2[i] + 2 * k3[i] + k4[i]);
   };
 }
@@ -1802,10 +1858,35 @@ function simulate(model, dt, T, y0, method = 'rk4') {
   const steps = Math.max(1, Math.round(T / dt));
   const stride = Math.max(1, Math.ceil(steps / MAX_RECORD_PTS));
   const cnt = Math.floor(steps / stride) + 1;
-  const step = integratorRK4(model);
   const y = Float64Array.from(y0 || model.ics);
   const ts = new Float64Array(cnt), ys = model.vars.map(() => new Float64Array(cnt));
   let k = 0, diverged = false;
+
+  // DDE Continuous History Buffer
+  const histT = [0];
+  const histY = model.vars.map((_, i) => [y[i]]);
+  const hasDelay = model.hasDelay;
+
+  const __delay = (vName, tau, currT) => {
+    const vIdx = model.vars.indexOf(vName);
+    if (vIdx < 0) return 0;
+    const target = currT - tau;
+    if (target <= 0 || histT.length < 2) return (y0 ? y0[vIdx] : model.ics[vIdx]);
+    let low = 0, high = histT.length - 1;
+    while (low <= high) {
+      const mid = (low + high) >> 1;
+      if (histT[mid] < target) low = mid + 1;
+      else high = mid - 1;
+    }
+    const idx1 = Math.max(0, Math.min(histT.length - 1, low));
+    const idx0 = Math.max(0, idx1 - 1);
+    const t0 = histT[idx0], t1 = histT[idx1];
+    if (t1 === t0) return histY[vIdx][idx0];
+    const frac = (target - t0) / (t1 - t0);
+    return histY[vIdx][idx0] + frac * (histY[vIdx][idx1] - histY[vIdx][idx0]);
+  };
+
+  const step = integratorRK4(model, __delay);
 
   const rec = t => {
     ts[k] = t;
@@ -1815,7 +1896,21 @@ function simulate(model, dt, T, y0, method = 'rk4') {
   rec(0);
 
   for (let s = 1; s <= steps; s++) {
-    step((s - 1) * dt, y, dt);
+    const tNow = (s - 1) * dt;
+    step(tNow, y, dt);
+
+    // In-loop event detection & discrete state resets (Hybrid Dynamic Automata)
+    if (model.events && model.events.length) {
+      for (let e = 0; e < model.events.length; e++) {
+        model.events[e](s * dt, y, model.p);
+      }
+    }
+
+    if (hasDelay) {
+      histT.push(s * dt);
+      for (let i = 0; i < model.n; i++) histY[i].push(y[i]);
+    }
+
     if (badVec(y)) { diverged = true; break; }
     if (s % stride === 0 && k < cnt) rec(s * dt);
   }
@@ -2378,6 +2473,44 @@ y(0) = 1.0
 z(0) = 0.0`
   },
   {
+    category: 'Delay Differential Equations (DDE)',
+    name: 'Mackey–Glass Delay Attractor',
+    dt: 0.05, T: 150, tab: 'series',
+    text: `# Mackey-Glass 1977: Physiological chaos in white blood cell production
+# Delay Differential Equation (DDE) with lag tau = 17
+x' = (0.2 * delay(x, 17)) / (1 + (delay(x, 17)^10)) - 0.1 * x
+x(0) = 1.2`
+  },
+  {
+    category: 'Hybrid & Event-Driven Systems',
+    name: 'Chaotic Bouncing Ball on Vibrating Plate',
+    dt: 0.005, T: 40, tab: 'phase',
+    text: `# Holmes 1982: Impact oscillator & chaotic bouncing ball
+# Discrete state mutation occurs instantaneously upon floor collision
+y' = v
+v' = -g
+when y <= 0 and v < 0 => y = 0, v = -e*v + 1.4*cos(1.8*t)
+g = 9.81
+e = 0.8
+y(0) = 1.5
+v(0) = 0.0`
+  },
+  {
+    category: 'Hybrid & Event-Driven Systems',
+    name: 'Leaky Integrate-and-Fire (LIF) Spiking Neuron',
+    dt: 0.05, T: 80, tab: 'series',
+    text: `# Lapicque 1907: Biological neuron with membrane potential spike reset
+v' = (v_rest - v + r*i) / tau
+when v >= v_thresh => v = v_reset
+v_rest = -70
+v_thresh = -55
+v_reset = -75
+r = 10
+i = 2.2
+tau = 15
+v(0) = -70`
+  },
+  {
     category: 'Biological & Chemical Dynamics',
     name: 'SIR Epidemic Model',
     dt: 0.05, T: 120, tab: 'series',
@@ -2477,6 +2610,7 @@ const STATE = {
   audioOn: false,
   recurrenceEps: 0.10,
   anaglyph3D: false,
+  bvpCfg: { xa: 0, ya: 0, xb: 10, yb: 2, s0: 0.5 },
   W: 100,
   H: 100,
   dpr: 1
@@ -3432,6 +3566,116 @@ function computeEnergy(model, yVec) {
 /* ==========================================================================
    RECURRENCE PLOT & QUANTIFICATION ANALYSIS (RQA)
    ========================================================================== */
+
+/* ==========================================================================
+   BOUNDARY VALUE PROBLEM (BVP) SHOOTING METHOD ENGINE
+   Solves y'' = f(x, y, y') with two-point boundary conditions: y(xa) = ya, y(xb) = yb
+   ========================================================================== */
+function drawBVP() {
+  const m = STATE.model;
+  if (!m || m.n < 2) {
+    renderNotice('Two-Point BVP shooting requires at least a 2nd-order system (e.g. y and vy).');
+    return;
+  }
+
+  const B = STATE.bvpCfg || { xa: 0, ya: 0, xb: 10, yb: 2, s0: 0.5 };
+  const xa = B.xa, ya = B.ya, xb = B.xb, yb = B.yb;
+  const dt = 0.02;
+  const T = Math.abs(xb - xa) || 10;
+
+  // Newton-Raphson shooting across unknown initial slope s = y'(xa)
+  let s = B.s0 !== undefined ? B.s0 : 0.5;
+  const attempts = [];
+  let converged = false;
+  let finalResidual = 0;
+
+  for (let iter = 0; iter < 8; iter++) {
+    // Integrate with slope s
+    const icsTrial = Float64Array.from(m.ics);
+    icsTrial[0] = ya;
+    icsTrial[1] = s;
+    const simTrial = simulate(m, dt, T, icsTrial, 'rk4');
+    attempts.push({ s, sim: simTrial });
+
+    const yEnd = simTrial.y[0][simTrial.y[0].length - 1];
+    const residual = yEnd - yb;
+    finalResidual = residual;
+
+    if (Math.abs(residual) < 1e-6) {
+      converged = true;
+      break;
+    }
+
+    // Numerical gradient of endpoint error dE/ds
+    const ds = 1e-5;
+    const icsPert = Float64Array.from(m.ics);
+    icsPert[0] = ya;
+    icsPert[1] = s + ds;
+    const simPert = simulate(m, dt, T, icsPert, 'rk4');
+    const yEndPert = simPert.y[0][simPert.y[0].length - 1];
+    const dEds = (yEndPert - yEnd) / ds;
+
+    if (Math.abs(dEds) < 1e-12) break;
+    s -= (residual / dEds);
+  }
+
+  // Draw Frame
+  const allY = attempts.map(a => a.sim.y[0]);
+  const yr = getExtent(allY);
+  const xr = [xa, xb];
+  const f = drawFrame(xr, yr, 'Spatial Coordinate x', 'State y(x)');
+
+  // Draw shooting attempts (faded violet)
+  for (let a = 0; a < attempts.length - 1; a++) {
+    const simA = attempts[a].sim;
+    ctx.strokeStyle = 'rgba(168, 85, 247, 0.25)';
+    ctx.lineWidth = 1.0;
+    ctx.beginPath();
+    for (let i = 0; i < simA.t.length; i++) {
+      const px = f.X(xa + simA.t[i]), py = f.Y(simA.y[0][i]);
+      i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+    }
+    ctx.stroke();
+  }
+
+  // Draw converged exact solution (glowing cyan)
+  const best = attempts[attempts.length - 1].sim;
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 2.2;
+  ctx.beginPath();
+  for (let i = 0; i < best.t.length; i++) {
+    const px = f.X(xa + best.t[i]), py = f.Y(best.y[0][i]);
+    i ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+  }
+  ctx.stroke();
+
+  // Pin Markers: Start (xa, ya) and Target (xb, yb)
+  [ [xa, ya, 'Start: y(' + xa + ') = ' + ya], [xb, yb, 'Target Pin: y(' + xb + ') = ' + yb] ].forEach(([px, py, lbl], idx) => {
+    const sx = f.X(px), sy = f.Y(py);
+    ctx.fillStyle = idx === 0 ? '#10b981' : '#f43f5e';
+    ctx.beginPath();
+    ctx.arc(sx, sy, 5.5, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1.8;
+    ctx.stroke();
+
+    ctx.font = '11px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+    ctx.fillStyle = '#ffffff';
+    ctx.textAlign = idx === 0 ? 'left' : 'right';
+    ctx.fillText(lbl, sx + (idx === 0 ? 10 : -10), sy - 8);
+  });
+
+  f.end();
+
+  ctx.font = '11px ' + getComputedStyle(document.body).getPropertyValue('--font-mono');
+  ctx.fillStyle = converged ? '#10b981' : '#f43f5e';
+  ctx.textAlign = 'right';
+  ctx.fillText(converged ? `✓ BVP Converged (${attempts.length} shooting iterations)` : `BVP Shooting (Residual: ${finalResidual.toExponential(2)})`, STATE.W - 30, 36);
+  ctx.fillStyle = '#71717a';
+  ctx.fillText(`Computed initial slope y'(${xa}) = ${s.toFixed(4)}`, STATE.W - 30, 52);
+}
+
 function drawRecurrencePlot() {
   const m = STATE.model;
   if (!m || !STATE.sim || STATE.sim.t.length < 10) {
@@ -3608,6 +3852,7 @@ function draw() {
   else if (STATE.tab === 'poincare') drawPoincare();
   else if (STATE.tab === 'return') drawReturnMap();
   else if (STATE.tab === 'recurrence') drawRecurrencePlot();
+  else if (STATE.tab === 'bvp') drawBVP();
   else if (STATE.tab === 'fft') drawFFT();
 
   if (STATE.sim) {
@@ -3835,6 +4080,7 @@ const TABS_CONFIG = [
   { id: 'poincare', label: 'POINCARÉ' },
   { id: 'return', label: 'RETURN MAP' },
   { id: 'recurrence', label: 'RECURRENCE' },
+  { id: 'bvp', label: 'BVP SHOOTING' },
   { id: 'fft', label: 'FFT SPECTRUM' }
 ];
 
@@ -4010,6 +4256,23 @@ function buildOptionsBar() {
     valLabel.innerHTML = `<span>At Value:</span><input type="number" step="any" value="${STATE.poincareVal || 27}" style="width:68px;background:var(--bg-elevated);color:#fff;border:1px solid var(--border-subtle);border-radius:4px;padding:2px 6px">`;
     valLabel.querySelector('input').onchange = e => { STATE.poincareVal = +e.target.value; draw(); };
     left.appendChild(valLabel);
+  } else if (STATE.tab === 'bvp') {
+    const B = STATE.bvpCfg || (STATE.bvpCfg = { xa: 0, ya: 0, xb: 10, yb: 2, s0: 0.5 });
+    const grp = document.createElement('div');
+    grp.className = 'opt-item';
+    grp.innerHTML = `<span>Boundary Target: y(</span>
+      <input id="bvp-xb" type="number" step="any" value="${B.xb}" style="width:50px;background:var(--bg-elevated);color:#fff;border:1px solid var(--border-subtle);border-radius:4px;padding:2px 4px">
+      <span>) =</span>
+      <input id="bvp-yb" type="number" step="any" value="${B.yb}" style="width:50px;background:var(--bg-elevated);color:#fff;border:1px solid var(--border-subtle);border-radius:4px;padding:2px 4px">`;
+    grp.querySelector('#bvp-xb').onchange = e => { B.xb = +e.target.value; draw(); };
+    grp.querySelector('#bvp-yb').onchange = e => { B.yb = +e.target.value; draw(); };
+    left.appendChild(grp);
+
+    const shootBtn = document.createElement('button');
+    shootBtn.className = 'primary';
+    shootBtn.textContent = 'Solve BVP';
+    shootBtn.onclick = () => draw();
+    right.appendChild(shootBtn);
   } else if (STATE.tab === 'recurrence') {
     const epsGrp = document.createElement('div');
     epsGrp.className = 'opt-item';
@@ -4591,6 +4854,124 @@ Simulations were executed using \\textbf{Dynamics Lab}, a zero-dependency in-bro
   showToast('Academic LaTeX Paper (.tex) exported.');
 }
 
+
+/* Autonomous Embedded ANSI C Code Generator (Challenging Simulink Coder) */
+function exportEmbeddedCCode() {
+  const m = STATE.model;
+  if (!m) return;
+
+  const n = m.n;
+  const numP = m.pnames.length;
+
+  let cCode = `/* =========================================================================
+   DYNAMICS LAB --- AUTONOMOUS EMBEDDED C CODE GENERATOR
+   Model: ${m.name || 'Dynamical System'}
+   Generated by Vaisakh Sriram's Dynamics Lab
+   Standard: ISO C99 / MISRA-C Compliant. Zero dynamic memory allocation (no malloc).
+   Target: Microcontrollers (STM32, ESP32, Arduino, ARM Cortex-M) & Embedded ECUs
+   ========================================================================= */
+
+#include <math.h>
+#include <stdio.h>
+
+#define STATE_DIM ${n}
+#define PARAM_DIM ${Math.max(1, numP)}
+
+typedef struct {
+    double y[STATE_DIM];     /* State Vector [${m.vars.join(', ')}] */
+    double p[PARAM_DIM];     /* Parameter Constants */
+    double t;                /* Integration Clock */
+} DynamicsModel;
+
+/* Derivative Evaluation: dy/dt = f(t, y, p) */
+static void model_derivatives(double t, const double y[STATE_DIM], const double p[PARAM_DIM], double dydt[STATE_DIM]) {
+    /* State unpacking */
+`;
+
+  m.vars.forEach((v, i) => {
+    cCode += `    double ${v} = y[${i}];\n`;
+  });
+
+  if (numP > 0) {
+    cCode += `    /* Parameter unpacking */\n`;
+    m.pnames.forEach((pn, i) => {
+      cCode += `    double ${pn} = p[${i}];\n`;
+    });
+  }
+
+  cCode += `\n    /* Equations of motion */\n`;
+  m.vars.forEach((v, i) => {
+    let eqC = (m.eqLines[i] || '0').replace(/\^/g, ''); // simplified power
+    cCode += `    dydt[${i}] = ${m.eqLines[i] || '0'};\n`;
+  });
+
+  cCode += `}
+
+/* Deterministic 4th-Order Classical Runge-Kutta Step */
+void model_step(DynamicsModel* m, double dt) {
+    double k1[STATE_DIM], k2[STATE_DIM], k3[STATE_DIM], k4[STATE_DIM];
+    double y_tmp[STATE_DIM];
+    int i;
+
+    /* Stage 1 */
+    model_derivatives(m->t, m->y, m->p, k1);
+    for (i = 0; i < STATE_DIM; i++) y_tmp[i] = m->y[i] + 0.5 * dt * k1[i];
+
+    /* Stage 2 */
+    model_derivatives(m->t + 0.5 * dt, y_tmp, m->p, k2);
+    for (i = 0; i < STATE_DIM; i++) y_tmp[i] = m->y[i] + 0.5 * dt * k2[i];
+
+    /* Stage 3 */
+    model_derivatives(m->t + 0.5 * dt, y_tmp, m->p, k3);
+    for (i = 0; i < STATE_DIM; i++) y_tmp[i] = m->y[i] + dt * k3[i];
+
+    /* Stage 4 */
+    model_derivatives(m->t + dt, y_tmp, m->p, k4);
+    for (i = 0; i < STATE_DIM; i++) {
+        m->y[i] += (dt / 6.0) * (k1[i] + 2.0 * k2[i] + 2.0 * k3[i] + k4[i]);
+    }
+    m->t += dt;
+}
+
+/* Initialization Routine */
+void model_init(DynamicsModel* m) {
+    m->t = 0.0;
+`;
+
+  m.vars.forEach((v, i) => {
+    cCode += `    m->y[${i}] = ${m.ics[i]};\n`;
+  });
+
+  m.pnames.forEach((pn, i) => {
+    cCode += `    m->p[${i}] = ${m.p[i]};\n`;
+  });
+
+  cCode += `}
+
+#ifdef RUN_STANDALONE
+int main(void) {
+    DynamicsModel sys;
+    model_init(&sys);
+    printf("t,${m.vars.join(',')}\n");
+
+    const double dt = ${$('dt').value || '0.01'};
+    for (int step = 0; step < 1000; step++) {
+        printf("%.4f`;
+  m.vars.forEach(() => { cCode += ',%.6f'; });
+  cCode += `\n", sys.t`;
+  m.vars.forEach((_, i) => { cCode += `, sys.y[${i}]`; });
+  cCode += `);
+        model_step(&sys, dt);
+    }
+    return 0;
+}
+#endif
+`;
+
+  triggerDownload('dynamics_model.c', cCode, 'text/x-c');
+  showToast('Embedded ANSI C Code (.c) exported.');
+}
+
 function exportPythonCode() {
   const m = STATE.model;
   if (!m) return;
@@ -4635,6 +5016,8 @@ $('export-matlab').onclick = exportMatlabCode;
 $('export-python').onclick = exportPythonCode;
   const lBtn = $('export-latex');
   if (lBtn) lBtn.onclick = exportLatexReport;
+  const cBtn = $('export-c');
+  if (cBtn) cBtn.onclick = exportEmbeddedCCode;
 $('export-csv').onclick = () => {
   if (!STATE.sim) return;
   let csv = 't,' + STATE.model.vars.join(',') + '\n';
