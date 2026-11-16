@@ -1,26 +1,23 @@
 <div align="center">
-  <img src="logo.png" alt="Dynamics Lab Logo" width="96" height="96">
-</div>
+  <br>
+  <img src="logo.png" alt="Dynamics Lab Logo" width="160">
+  <br><br>
+  <h1>Dynamics Lab</h1>
+  <p><strong>Nonlinear Dynamics & Chaos Simulation Engine</strong></p>
+  <p><em>Zero-dependency, standalone browser laboratory for real-time ODE integration, 3D attractors, and bifurcation analysis.</em></p>
+  <br>
 
-```text
-  ____  __   __ _   _    _    __  __ ___ ____ ____    _        _    ____  
- |  _ \ \ \ / /| \ | |  / \  |  \/  |_ _/ ___/ ___|  | |      / \  | __ ) 
- | | | | \ V / |  \| | / _ \ | |\/| || | |   \___ \  | |     / _ \ |  _ \ 
- | |_| |  | |  | |\  |/ ___ \| |  | || | |___ ___) | | |___ / ___ \| |_) |
- |____/   |_|  |_| \_/_/   \_\_|  |_|____\____|____/  |_____/_/   \_\____/ 
-```
+  [![License: MIT](https://img.shields.io/badge/License-MIT-18181b.svg?style=flat-square)](LICENSE)
+  [![Dependencies: None](https://img.shields.io/badge/Dependencies-0-18181b.svg?style=flat-square)](#)
+  [![Engine: Vanilla JS](https://img.shields.io/badge/Engine-Vanilla%20JS%20%2F%20Canvas2D-18181b.svg?style=flat-square)](#)
+  [![Platform: Web & Mobile](https://img.shields.io/badge/Platform-Desktop%20%7C%20Mobile-18181b.svg?style=flat-square)](#)
 
-<div align="center">
+  <br><br>
 
-**Nonlinear Dynamics & Chaos Engine — Single-File, Zero-Dependency Browser Simulator**
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-black.svg?style=flat-square)](LICENSE)
-[![Dependencies: 0](https://img.shields.io/badge/Dependencies-0-black.svg?style=flat-square)](#)
-[![Engine: Vanilla JS](https://img.shields.io/badge/Engine-Vanilla%20JS%20%2F%20Canvas2D-black.svg?style=flat-square)](#)
-[![Platform: Web & Mobile](https://img.shields.io/badge/Platform-Web%20%7C%20Mobile-black.svg?style=flat-square)](#)
-
-[**Launch Interactive Simulator**](https://vaisakh-sriram.github.io/Dynamics-lab/)
-
+  <a href="https://vaisakh-sriram.github.io/Dynamics-lab/">
+    <img src="https://img.shields.io/badge/LAUNCH%20INTERACTIVE%20SIMULATOR-18181b?style=for-the-badge&logoColor=white" alt="Launch Interactive Simulator">
+  </a>
+  <br><br>
 </div>
 
 ---
@@ -30,45 +27,6 @@
 **Dynamics Lab** is an interactive numerical laboratory for simulating ordinary differential equations (ODEs), nonlinear dynamics, and chaotic attractors in real time.
 
 Engineered entirely in pure vanilla JavaScript and HTML5 Canvas2D, it operates as a **single, self-contained HTML file with zero dependencies, zero npm packages, and zero build pipelines**. Every model equation, parameter state, and view configuration is encoded directly into the URL hash permalink, allowing instantaneous sharing and offline execution.
-
----
-
-## System Architecture
-
-```text
-+-----------------------------------------------------------------------------------------+
-|                                 DYNAMICS LAB ENGINE                                     |
-+-----------------------------------------------------------------------------------------+
-                                             |
-                              [ Mathematical Expression Stream ]
-                                             |
-                                             v
-+---------------------------+   +---------------------------+   +-------------------------+
-|     RECURSIVE-DESCENT     |-->|       JIT COMPILER        |-->|     SOLVER SELECTOR     |
-|   Tokenizer & AST Engine  |   |     F(t, y, p, out)       |   |   RK4 / RK45 / Verlet   |
-+---------------------------+   +---------------------------+   +-------------------------+
-                                                                             |
-                                             +-------------------------------+------------+
-                                             v                                            v
-+--------------------------------------------------------+   +--------------------------------------------+
-|                 NUMERICAL INTEGRATION                  |   |             CHAOS & STABILITY              |
-|  * Classical 4th-Order Runge-Kutta (RK4)               |   |  * Maximal Lyapunov Exponent (Benettin)    |
-|  * Dormand-Prince 5(4) Adaptive Integrator (ode45)     |   |  * Multi-Start Newton-Raphson Root Finder  |
-|  * Symplectic Leapfrog (Energy-Conserving Verlet)      |   |  * Analytical Cardano/Viete 3x3 Eigenvalues|
-+--------------------------------------------------------+   +--------------------------------------------+
-                                             |                                            |
-                                             +-------------------------------+------------+
-                                                                             v
-+-----------------------------------------------------------------------------------------+
-|                                   7 SCIENTIFIC VIEWPORTS                                |
-|   [2D Phase Flow]   [3D Attractor]   [Time Series]   [Sensitivity]   [Bifurcation] ...  |
-+-----------------------------------------------------------------------------------------+
-                                             |
-                                             v
-+-----------------------------------------------------------------------------------------+
-|                   HARDWARE-ACCELERATED CANVAS2D  +  URL HASH PERMALINK                  |
-+-----------------------------------------------------------------------------------------+
-```
 
 ---
 
@@ -85,7 +43,7 @@ Engineered entirely in pure vanilla JavaScript and HTML5 Canvas2D, it operates a
 
 ### 3. Automated Equilibrium & Stability Analysis
 * **Newton-Raphson Root Finding:** Multi-start search discovering fixed points across phase space ($F(x^*) = 0$).
-* **Exact Analytical Eigenvalues:** Quadratic discriminant classification for 2D systems, plus **Cardano / Viete cubic solver** for 3D systems.
+* **Exact Analytical Eigenvalues:** Quadratic discriminant classification for 2D systems, plus **Cardano / Viète cubic solver** for 3D systems.
 * **Hyperbolic Point Classification:** Differentiates Saddle Points, Stable Nodes, Spiral Sinks, and Saddle-Foci.
 
 ### 4. 7 Scientific Analysis Workspaces
@@ -152,7 +110,7 @@ Dynamics-lab/
 ├── dynamics-lab.html   # Standalone codefile copy
 ├── logo.png            # Official monochrome brand asset
 ├── favicon.png         # Browser favicon icon
-└── README.md           # Technical documentation & architecture diagrams
+└── README.md           # Project documentation
 ```
 
 ---
