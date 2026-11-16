@@ -1,91 +1,145 @@
-# Dynamics Lab
+<div align="center">
+  <img src="logo.png" alt="Dynamics Lab Logo" width="96" height="96">
+</div>
 
-> **Zero-Dependency Nonlinear Dynamics & Chaos Engine in a Single Self-Contained HTML File**
+```text
+  ____  __   __ _   _    _    __  __ ___ ____ ____    _        _    ____  
+ |  _ \ \ \ / /| \ | |  / \  |  \/  |_ _/ ___/ ___|  | |      / \  | __ ) 
+ | | | | \ V / |  \| | / _ \ | |\/| || | |   \___ \  | |     / _ \ |  _ \ 
+ | |_| |  | |  | |\  |/ ___ \| |  | || | |___ ___) | | |___ / ___ \| |_) |
+ |____/   |_|  |_| \_/_/   \_\_|  |_|____\____|____/  |_____/_/   \_\____/ 
+```
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-white.svg?style=flat-square)](LICENSE)
-[![Zero Dependencies](https://img.shields.io/badge/Dependencies-0-white.svg?style=flat-square)](#)
-[![Pure Vanilla JS](https://img.shields.io/badge/Engine-Vanilla%20JS%20%2F%20Canvas2D-white.svg?style=flat-square)](#)
+<div align="center">
 
-[**Live Interactive Demo »**](https://vaisakh-sriram.github.io/dynamics-lab/)
+**Nonlinear Dynamics & Chaos Engine — Single-File, Zero-Dependency Browser Simulator**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-black.svg?style=flat-square)](LICENSE)
+[![Dependencies: 0](https://img.shields.io/badge/Dependencies-0-black.svg?style=flat-square)](#)
+[![Engine: Vanilla JS](https://img.shields.io/badge/Engine-Vanilla%20JS%20%2F%20Canvas2D-black.svg?style=flat-square)](#)
+[![Platform: Web & Mobile](https://img.shields.io/badge/Platform-Web%20%7C%20Mobile-black.svg?style=flat-square)](#)
+
+[**Launch Interactive Simulator**](https://vaisakh-sriram.github.io/Dynamics-lab/)
+
+</div>
 
 ---
 
 ## Overview
 
-**Dynamics Lab** is an interactive, browser-based numerical laboratory for simulating ordinary differential equations (ODEs), nonlinear dynamics, and chaotic attractors in real time.
+**Dynamics Lab** is an interactive numerical laboratory for simulating ordinary differential equations (ODEs), nonlinear dynamics, and chaotic attractors in real time.
 
-Built in pure vanilla JavaScript and HTML5 Canvas, it runs as a **single, self-contained HTML codefile with zero dependencies, zero npm packages, and zero build pipelines**. Every model, parameter set, and view configuration is encoded directly into the URL hash, making any simulation an instantaneously runnable permalink.
+Engineered entirely in pure vanilla JavaScript and HTML5 Canvas2D, it operates as a **single, self-contained HTML file with zero dependencies, zero npm packages, and zero build pipelines**. Every model equation, parameter state, and view configuration is encoded directly into the URL hash permalink, allowing instantaneous sharing and offline execution.
 
 ---
 
-## Key Features
+## System Architecture
 
-### 1. Multi-Solver Integration Engine
-* **RK4:** Classical 4th-order Runge-Kutta integrator with fixed time-step.
-* **RK45 Dormand-Prince (`ode45`):** 7-stage Butcher tableau adaptive step-size integrator matching MATLAB's standard `ode45`.
-* **Symplectic Verlet:** Reversible, energy-conserving leapfrog integrator designed for Hamiltonian physical systems and celestial orbits.
+```text
++-----------------------------------------------------------------------------------------+
+|                                 DYNAMICS LAB ENGINE                                     |
++-----------------------------------------------------------------------------------------+
+                                             |
+                              [ Mathematical Expression Stream ]
+                                             |
+                                             v
++---------------------------+   +---------------------------+   +-------------------------+
+|     RECURSIVE-DESCENT     |-->|       JIT COMPILER        |-->|     SOLVER SELECTOR     |
+|   Tokenizer & AST Engine  |   |     F(t, y, p, out)       |   |   RK4 / RK45 / Verlet   |
++---------------------------+   +---------------------------+   +-------------------------+
+                                                                             |
+                                             +-------------------------------+------------+
+                                             v                                            v
++--------------------------------------------------------+   +--------------------------------------------+
+|                 NUMERICAL INTEGRATION                  |   |             CHAOS & STABILITY              |
+|  * Classical 4th-Order Runge-Kutta (RK4)               |   |  * Maximal Lyapunov Exponent (Benettin)    |
+|  * Dormand-Prince 5(4) Adaptive Integrator (ode45)     |   |  * Multi-Start Newton-Raphson Root Finder  |
+|  * Symplectic Leapfrog (Energy-Conserving Verlet)      |   |  * Analytical Cardano/Viete 3x3 Eigenvalues|
++--------------------------------------------------------+   +--------------------------------------------+
+                                             |                                            |
+                                             +-------------------------------+------------+
+                                                                             v
++-----------------------------------------------------------------------------------------+
+|                                   7 SCIENTIFIC VIEWPORTS                                |
+|   [2D Phase Flow]   [3D Attractor]   [Time Series]   [Sensitivity]   [Bifurcation] ...  |
++-----------------------------------------------------------------------------------------+
+                                             |
+                                             v
++-----------------------------------------------------------------------------------------+
+|                   HARDWARE-ACCELERATED CANVAS2D  +  URL HASH PERMALINK                  |
++-----------------------------------------------------------------------------------------+
+```
 
-### 2. Real-Time Chaos Diagnostics
-* **Maximal Lyapunov Exponent ($\lambda$):** Continuous tracking of twin trajectories separated by an infinitesimal perturbation ($d_0 = 10^{-8}$) with Benettin step-by-step reorthonormalization.
-* **Instant Regimes Classification:** Categorizes solutions as Stable Fixed Point, Limit Cycle / Torus, or Deterministic Chaos ($\lambda > 0$).
+---
 
-### 3. Automated Fixed-Point & Stability Analysis
-* **Root Finding:** Multi-start Newton-Raphson finder with finite-difference Jacobian evaluation.
-* **Exact Eigenvalue Solver:** Analytical 2D trace-determinant classification and 3D Cardano/Viète characteristic cubic equation solver.
-* **Stability Classification:** Automatic identification of Saddle Points, Stable Nodes, Spiral Sinks, and Saddle-Foci.
+## Core Capabilities
 
-### 4. 7 Scientific Analysis Views
-1. **2D Phase Portrait:** Vector quiver fields, analytical nullclines, click-to-seed trajectories, and Monte Carlo swarm particle dispersion.
-2. **3D Attractor:** Full spherical orbital rotation, multi-touch dual-finger pinch zoom, velocity-gradient coloring, and playback comet trails.
-3. **Time Series:** Multi-variable synchronous trajectory graphs with time scrubbing.
+### 1. Multi-Solver Integration Suite
+* **RK4:** Classical 4th-order Runge-Kutta integrator with deterministic fixed step-size.
+* **RK45 Dormand-Prince (`ode45`):** 7-stage Butcher tableau adaptive step-size integrator matching MATLAB's standard numerical engine.
+* **Symplectic Verlet:** Time-reversible, energy-preserving leapfrog scheme for Hamiltonian and orbital mechanics.
+
+### 2. Chaos Quantification & Lyapunov Exponents
+* **Maximal Lyapunov Exponent ($\lambda$):** Continuous measurement of trajectory divergence under infinitesimal perturbation ($d_0 = 10^{-8}$) with Benettin reorthonormalization.
+* **Regime Classification:** Automatically categorizes dynamics into **Stable Equilibrium**, **Limit Cycle / Torus**, or **Deterministic Chaos ($\lambda > 0$)**.
+
+### 3. Automated Equilibrium & Stability Analysis
+* **Newton-Raphson Root Finding:** Multi-start search discovering fixed points across phase space ($F(x^*) = 0$).
+* **Exact Analytical Eigenvalues:** Quadratic discriminant classification for 2D systems, plus **Cardano / Viete cubic solver** for 3D systems.
+* **Hyperbolic Point Classification:** Differentiates Saddle Points, Stable Nodes, Spiral Sinks, and Saddle-Foci.
+
+### 4. 7 Scientific Analysis Workspaces
+1. **2D Phase Portrait:** Direction quiver vector fields, analytical nullclines, click-to-seed trajectories, and Monte Carlo particle swarms.
+2. **3D Attractor:** 3-axis spherical orbital rotation, two-finger pinch-to-zoom, velocity-gradient coloring, and comet animation trails.
+3. **Time Series:** Multi-variable synchronous trajectory plotting with scrubbable playback.
 4. **Sensitivity:** Real-time demonstration of the butterfly effect with twin perturbed trajectories ($10^{-5}$).
 5. **Bifurcation Diagrams:** Automated parameter sweeps detecting period-doubling cascades and transitions to chaos.
-6. **Poincaré Cross-Sections:** Hyperplane piercing detection with linear interpolation.
-7. **FFT Power Spectrum:** In-place Radix-2 Cooley-Tukey Fast Fourier Transform for identifying discrete frequencies vs. chaotic broadband noise.
+6. **Poincaré Cross-Sections:** Hyperplane piercing detection with sub-step linear interpolation.
+7. **FFT Power Spectrum:** In-place Radix-2 Cooley-Tukey Fast Fourier Transform for identifying harmonic frequencies vs. chaotic broadband noise.
 
-### 5. Seamless Code Generation & Export
+### 5. Interoperability & Code Generation
 * **MATLAB / GNU Octave:** Generates complete, runnable standalone `.m` scripts utilizing `ode45`.
 * **Python / SciPy:** Exports ready-to-run `.py` scripts utilizing `scipy.integrate.solve_ivp` and `matplotlib`.
-* **Raw Data & Visuals:** Instant export to CSV tabular time-series and high-resolution PNG snapshots.
+* **Raw CSV & Snapshots:** Instant export to CSV tabular time-series and high-resolution PNG captures.
 
-### 6. Fully Mobile Responsive
-* Adaptive two-mode architecture: switches seamlessly between a full-screen simulation canvas (`100dvh`) and a dedicated controls drawer.
+### 6. Mobile Responsive Interface
+* Adaptive two-mode layout: switches between a full-screen simulation canvas (`100dvh`) and a dedicated controls drawer.
 * Native multi-touch gestures: 1-finger 3D orbital drag, 2-finger pinch-to-zoom, and 2-finger pan.
 
 ---
 
-## 14 Built-In Systems
+## 14 Pre-Loaded Dynamic Systems
 
-| Model | Classification | Description |
-|---|---|---|
-| **Lorenz System (1963)** | 3D Chaos | Atmospheric thermal convection model with classic butterfly attractor |
-| **Rössler Attractor (1976)** | 3D Chaos | Minimal chemical kinetics model with single-band spiral chaos |
-| **Van der Pol Oscillator (1920)** | 2D Limit Cycle | Vacuum tube relaxation oscillator with non-conservative nonlinear damping |
-| **Duffing Oscillator (1918)** | 2D/Non-autonomous | Double-well potential oscillator under periodic sinusoidal forcing |
-| **Lotka-Volterra (1925)** | 2D Biological | Nonlinear predator-prey population dynamics |
-| **Chua's Circuit (1983)** | 3D Physical Chaos | Physical non-linear electronic circuit producing double-scroll attractor |
-| **Thomas' Attractor** | 3D Symmetric Chaos | Dissipative cyclically symmetric labyrinth chaos |
-| **Halvorsen Attractor** | 3D Cyclic Chaos | Highly symmetric cyclic chaotic system with triple lobes |
-| **Aizawa Attractor** | 3D Toroidal Chaos | Spherical core attractor with vertical axial jet outflow |
-| **Chen Attractor (1999)** | 3D Dual-Scroll | Dual-scroll chaotic attractor with complex topological structure |
-| **Rikitake Dynamo** | 3D Geomagnetic Chaos | Two-disk geomagnetic field reversal dynamo |
-| **Sprott Case B** | 3D Minimal Chaos | Simplest 3-variable quadratic chaotic differential system |
-| **Hindmarsh-Rose (1984)** | 3D Neurodynamics | Neural bursting and action-potential firing model |
-| **Forced Damped Pendulum** | 2D/Non-autonomous | Rigid pendulum with damping and sinusoidal periodic drive torque |
+| Model | Dimensions | Regime | Description |
+|---|---|---|---|
+| **Lorenz System (1963)** | 3D | Chaos | Atmospheric convection model exhibiting the canonical butterfly attractor |
+| **Rössler Attractor (1976)** | 3D | Chaos | Minimal chemical reaction model with a single folded band |
+| **Van der Pol Oscillator (1920)** | 2D | Limit Cycle | Non-conservative triode oscillator with nonlinear damping |
+| **Duffing Oscillator (1918)** | 2D (Forced) | Chaos | Periodically forced oscillator with a double-well potential |
+| **Lotka-Volterra (1925)** | 2D | Conservative | Nonlinear ecological model of predator-prey dynamics |
+| **Chua's Circuit (1983)** | 3D | Chaos | Physical electronic circuit producing double-scroll chaos |
+| **Thomas' Attractor** | 3D | Chaos | Cyclically symmetric dissipative labyrinth system |
+| **Halvorsen Attractor** | 3D | Chaos | Cyclic permutation system with three symmetric lobes |
+| **Aizawa Attractor** | 3D | Chaos | Spherical core attractor with vertical axial jet outflow |
+| **Chen Attractor (1999)** | 3D | Chaos | Dual-scroll attractor with complex topological structure |
+| **Rikitake Dynamo** | 3D | Chaos | Two-disk geomagnetic field reversal dynamo |
+| **Sprott Case B** | 3D | Chaos | Minimal 3-variable quadratic chaotic differential system |
+| **Hindmarsh-Rose (1984)** | 3D | Bursting | Neuronal membrane potential bursting and spike train model |
+| **Forced Damped Pendulum** | 2D (Forced) | Chaos | Physical rigid pendulum under periodic driving torque |
 
 ---
 
 ## Quickstart
 
-No dependencies, no bundlers, no npm, and no servers required.
+No Node.js, npm, bundlers, or servers required:
 
 ```bash
 # Clone the repository
-git clone https://github.com/VAISAKH-SRIRAM/dynamics-lab.git
-cd dynamics-lab
+git clone https://github.com/VAISAKH-SRIRAM/Dynamics-lab.git
+cd Dynamics-lab
 
 # Open directly in any web browser
-open dynamics-lab.html
+open index.html
 ```
 
 ---
@@ -93,16 +147,16 @@ open dynamics-lab.html
 ## Project Structure
 
 ```text
-dynamics-lab/
-├── dynamics-lab.html   # Complete, self-contained single-file application
-├── index.html          # Entrypoint for GitHub Pages hosting
-├── logo.png            # Official brand logo
+Dynamics-lab/
+├── index.html          # Main application (served on GitHub Pages)
+├── dynamics-lab.html   # Standalone codefile copy
+├── logo.png            # Official monochrome brand asset
 ├── favicon.png         # Browser favicon icon
-└── README.md           # Project documentation
+└── README.md           # Technical documentation & architecture diagrams
 ```
 
 ---
 
 ## License
 
-Distributed under the MIT License. See [LICENSE](LICENSE) for more details.
+Distributed under the MIT License. See [LICENSE](LICENSE) for details.
