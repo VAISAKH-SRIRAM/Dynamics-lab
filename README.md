@@ -11,7 +11,7 @@
   [![Dependencies: None](https://img.shields.io/badge/Dependencies-0-18181b.svg?style=flat-square)](#)
   [![Engine: Vanilla JS](https://img.shields.io/badge/Engine-Vanilla%20JS%20%2F%20Canvas2D-18181b.svg?style=flat-square)](#)
   [![Platform: Web & Mobile](https://img.shields.io/badge/Platform-Desktop%20%7C%20Mobile-18181b.svg?style=flat-square)](#)
-  [![Benchmarks: Verified](https://img.shields.io/badge/Benchmarks-Dynamics%20Lab%20vs%20MATLAB-18181b.svg?style=flat-square)](benchmarks/BENCHMARKS.md)
+  [![Benchmarks: Verified](https://img.shields.io/badge/Benchmarks-Dynamics%20Lab%20vs%20MATLAB-18181b.svg?style=flat-square)](BENCHMARKS.md)
 
   <br><br>
 
@@ -34,7 +34,7 @@ Engineered entirely in pure vanilla JavaScript and HTML5 Canvas2D, it operates a
 ## Official Scientific Benchmark Results: Dynamics Lab vs. MATLAB
 
 <div align="center">
-  <img src="benchmarks/benchmark_summary.png" alt="Official Benchmark Summary Dashboard: Dynamics Lab vs MATLAB" width="100%">
+  <img src="benchmark_summary.png" alt="Official Benchmark Summary Dashboard: Dynamics Lab vs MATLAB" width="100%">
   <p><em>Real-Time Hardware Benchmark: 12th Gen Intel Core i3-12100 (x64) | Node.js v24.13.0 (V8) vs. MATLAB R2024b. Automated runner: <code>node benchmarks/benchmark_suite.js</code></em></p>
 </div>
 
@@ -50,13 +50,13 @@ Engineered entirely in pure vanilla JavaScript and HTML5 Canvas2D, it operates a
 
 <div align="center">
   <br>
-  <img src="benchmarks/fluid_vortex_proof.png" alt="113,400 Continuum Variable Navier-Stokes Wind Tunnel: von Kármán Vortex Street" width="100%">
+  <img src="fluid_vortex_proof.png" alt="113,400 Continuum Variable Navier-Stokes Wind Tunnel: von Kármán Vortex Street" width="100%">
   <p><em>Live Continuum Capture: 113,400-variable D2Q9 Lattice Boltzmann simulation of von Kármán vortex shedding around a cylinder obstacle at 60 FPS in Dynamics Lab.</em></p>
   <br>
 </div>
 
 > [!NOTE]
-> All telemetry is programmatically logged in [benchmarks/results.json](benchmarks/results.json). Read the complete whitepaper in [benchmarks/BENCHMARKS.md](benchmarks/BENCHMARKS.md) or execute the benchmark suite locally with `node benchmarks/benchmark_suite.js`.
+> All telemetry is programmatically logged in [results.json](results.json). Read the complete whitepaper in [benchmarks/BENCHMARKS.md](BENCHMARKS.md) or execute the benchmark suite locally with `node benchmarks/benchmark_suite.js`.
 
 ---
 
@@ -193,15 +193,16 @@ open index.html
 
 ```text
 Dynamics-lab/
-├── index.html          # Main application (served on GitHub Pages)
-├── dynamics-lab.html   # Standalone single-file distribution copy
-├── logo.png            # Official monochrome brand asset
-├── favicon.png         # Browser favicon icon
-├── benchmarks/         # Scientific benchmark test suite & telemetry
-│   ├── benchmark_suite.js  # Reproducible test runner
-│   ├── results.json        # Machine-readable benchmark telemetry
-│   └── BENCHMARKS.md       # Official comparison whitepaper vs. MATLAB
-└── README.md           # Project documentation
+├── index.html               # Main application (served on GitHub Pages)
+├── dynamics-lab.html        # Standalone single-file distribution copy
+├── benchmark_summary.png    # Verified scientific benchmark comparison chart
+├── fluid_vortex_proof.png   # 113,400-variable continuum fluid simulation capture
+├── BENCHMARKS.md            # Official scientific comparison whitepaper vs. MATLAB
+├── benchmark_suite.js       # Reproducible test runner
+├── results.json             # Machine-readable benchmark telemetry
+├── logo.png                 # Official monochrome brand asset
+├── favicon.png              # Browser favicon icon
+└── README.md                # Project documentation
 ```
 
 ---
